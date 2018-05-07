@@ -9,21 +9,26 @@ MAINMENU initMainMenu(SDLcontext *context){
     SDL_Texture *playerVsAiTexture = NULL;
     SDL_Texture *optionsTexture = NULL;
     SDL_Texture *scoresTexture = NULL;
-    SDL_Color   defaultColor={255,255,255,100};
-    SDL_Color   selectedColor={255,255,255,100};
+    SDL_Color   defaultColor={255,255,255,SDL_ALPHA_OPAQUE};
+    SDL_Color   selectedColor={128,82,82,SDL_ALPHA_OPAQUE};
     int fontSize =20;
     char* pathBackground = "sonic_1_1991.jpg";
     char* pathTTF = "NiseSega.TTF";
+    char* player1Text = "SOLO";
+    char* player2Text = "VERSUS";
+    char* playerVsAiText = "VERSUS IA";
+    char* optionsText = "OPTIONS";
+    char* scoresText = "SCORES";
     backgroundTexture = loadTextureImg(pathBackground,context->renderer);
-    player1Texture = renderText("SOLO",pathTTF,defaultColor,fontSize,context->renderer);
+    player1Texture = renderText(player1Text,pathTTF,defaultColor,fontSize,context->renderer);
     SDL_Rect player1Rect = createRectFromTexture(player1Texture);
-    player2Texture = renderText("VERSUS",pathTTF,defaultColor,fontSize,context->renderer);
+    player2Texture = renderText(player2Text,pathTTF,defaultColor,fontSize,context->renderer);
     SDL_Rect player2Rect = createRectFromTexture(player2Texture);
-    playerVsAiTexture = renderText("VERSUS IA",pathTTF,defaultColor,fontSize,context->renderer);
+    playerVsAiTexture = renderText(playerVsAiText,pathTTF,defaultColor,fontSize,context->renderer);
     SDL_Rect playerVsAiRect = createRectFromTexture(playerVsAiTexture);
-    optionsTexture = renderText("OPTIONS",pathTTF,defaultColor,fontSize,context->renderer);
+    optionsTexture = renderText(optionsText,pathTTF,defaultColor,fontSize,context->renderer);
     SDL_Rect optionsRect = createRectFromTexture(optionsTexture);
-    scoresTexture = renderText("SCORES",pathTTF,defaultColor,fontSize,context->renderer);
+    scoresTexture = renderText(scoresText,pathTTF,defaultColor,fontSize,context->renderer);
     SDL_Rect scoresRect = createRectFromTexture(scoresTexture) ;
     //Todo: outline
     int xCenter,yCenter,offsetInit,offset;
@@ -41,32 +46,74 @@ MAINMENU initMainMenu(SDLcontext *context){
         backgroundTexture,
         player1Texture,
         player1Rect,
+        player1Text,
         player2Texture,
         player2Rect,
+        player2Text,
         playerVsAiTexture,
         playerVsAiRect,
+        playerVsAiText,
         optionsTexture,
         optionsRect,
+        optionsText,
         scoresTexture,
         scoresRect,
+        scoresText,
         defaultColor,
         selectedColor,
-        fontSize
+        pathBackground,
+        pathTTF,
+        fontSize,
+
     };
     return mainMenu;
 }
 
-int renderMainMenu(MAINMENU *mainmenu,SDLcontext *context){
+int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
+    if(ctr<0 || ctr>4){
+        logSDLError("Index de position invalide");
+        return(EXIT_FAILURE);
+    }else{
+        switch (ctr) {
+        case 0:
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            break;
+        case 1:
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            break;
+        case 2:
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            break;
+        case 3:
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            break;
+        case 4:
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        default:
+            break;
+        }
+    }
+
     //TODO : Build le renderer avec une boucle for.
     //TODO : check la réussite de SDL_RenderCopy.
-    SDL_RenderCopy(*(context->renderer),mainmenu->backgroundTexture,NULL,NULL);
+    SDL_RenderCopy(renderer,mainMenu->backgroundTexture,NULL,NULL);
     //possible problème d'acccès aux pointeurs.
-    if(SDL_RenderCopy(*(context->renderer),mainmenu->player1Texture,NULL,&(mainmenu->player1Rect))!=EXIT_SUCCESS){
+    if(SDL_RenderCopy(renderer,mainMenu->player1Texture,NULL,&(mainMenu->player1Rect))!=EXIT_SUCCESS){
         printf("echec de copie sur le rendu");
     }
-    SDL_RenderCopy(*(context->renderer),mainmenu->player2Texture,NULL,&(mainmenu->player2Rect));
-    SDL_RenderCopy(*(context->renderer),mainmenu->playerVsAiTexture,NULL,&(mainmenu->playerVsAiRect));
-    SDL_RenderCopy(*(context->renderer),mainmenu->optionsTexture,NULL,&(mainmenu->optionsRect));
-    SDL_RenderCopy(*(context->renderer),mainmenu->scoresTexture,NULL,&(mainmenu->scoresRect));
+    SDL_RenderCopy(renderer,mainMenu->player2Texture,NULL,&(mainMenu->player2Rect));
+    SDL_RenderCopy(renderer,mainMenu->playerVsAiTexture,NULL,&(mainMenu->playerVsAiRect));
+    SDL_RenderCopy(renderer,mainMenu->optionsTexture,NULL,&(mainMenu->optionsRect));
+    SDL_RenderCopy(renderer,mainMenu->scoresTexture,NULL,&(mainMenu->scoresRect));
     return(EXIT_SUCCESS);
 }

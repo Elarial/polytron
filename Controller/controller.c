@@ -6,6 +6,9 @@
 #include "tools.h"
 #include "controller.h"
 #include "../Vues/mainMenu.h"
+#include "../Vues/gameArea.h"
+#include "../Model/model.h"
+
 
 int initializeController(SDLcontext *context){
     if(initializeSDLcontexte(context->window,context->renderer,context->posX,context->posY,context->width,context->height)!= EXIT_SUCCESS
@@ -45,6 +48,8 @@ int initializeSDLttf(){
 }
 int runListeners(SDLcontext *context){
     int end = 0;
+    int ctr = 0;
+    int activeView = 0;
     SDL_Event event = {0};
     MAINMENU mainMenu = initMainMenu(context);
     while(end == 0){
@@ -57,30 +62,62 @@ int runListeners(SDLcontext *context){
             if(event.type == SDL_KEYDOWN){
                 switch (event.key.keysym.sym) {
                 case SDLK_UP:
-
+                    ctr--;
                     break;
                 case SDLK_LEFT:
-
                     break;
                 case SDLK_DOWN:
-
+                    ctr++;
                     break;
                 case SDLK_RIGHT:
-
+                    break;
+                case SDLK_a:
+                    activeView = ctr + 1;
+                    break;
+                case SDLK_ESCAPE:
+                    end=1;
                     break;
                 default:
                     break;
                 }
             }
+            if(ctr<0){
+                ctr=4;
+            }
+            if(ctr>4){
+                ctr=0;
+            }
         }
         //Mise à jour de la vue.
         SDL_RenderClear(*(context->renderer));
-        renderMainMenu(&mainMenu,context);
+        switch (activeView) {
+        case 0:
+            renderMainMenu(&mainMenu,ctr,*(context->renderer));
+            break;
+        case 1:
+            logSDLError("Not implemented");
+            activeView = 0;
+            break;
+        case 2:
+            logSDLError("Not implemented");
+            activeView = 0;
+            break;
+        case 3:
+            logSDLError("Not implemented");
+            activeView = 0;
+            break;
+        case 4:
+            logSDLError("Not implemented");
+            activeView = 0;
+            break;
+        case 5:
+            logSDLError("Not implemented");
+            activeView = 0;
+            break;
+        default:
+            break;
+        }
         SDL_RenderPresent(*(context->renderer));
-
-        //renderclear
-        //rendercopy
-        //renderpresent
     }
     SDL_DestroyWindow(*(context->window));
     SDL_DestroyRenderer(*(context->renderer));
