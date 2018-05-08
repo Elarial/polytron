@@ -74,6 +74,7 @@ int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
         logSDLError("Index de position invalide");
         return(EXIT_FAILURE);
     }else{
+        //Changement de la couleur du texte en fontion de l'input
         switch (ctr) {
         case 0:
             mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
@@ -105,15 +106,32 @@ int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
     }
 
     //TODO : Build le renderer avec une boucle for.
-    //TODO : check la réussite de SDL_RenderCopy.
-    SDL_RenderCopy(renderer,mainMenu->backgroundTexture,NULL,NULL);
-    //possible problème d'acccès aux pointeurs.
-    if(SDL_RenderCopy(renderer,mainMenu->player1Texture,NULL,&(mainMenu->player1Rect))!=EXIT_SUCCESS){
-        printf("echec de copie sur le rendu");
+
+    //Copie sur le rendu.
+    if(SDL_RenderCopy(renderer,mainMenu->backgroundTexture,NULL,NULL)!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du backgournd sur le rendu");
+        return(EXIT_FAILURE);
     }
-    SDL_RenderCopy(renderer,mainMenu->player2Texture,NULL,&(mainMenu->player2Rect));
-    SDL_RenderCopy(renderer,mainMenu->playerVsAiTexture,NULL,&(mainMenu->playerVsAiRect));
-    SDL_RenderCopy(renderer,mainMenu->optionsTexture,NULL,&(mainMenu->optionsRect));
-    SDL_RenderCopy(renderer,mainMenu->scoresTexture,NULL,&(mainMenu->scoresRect));
+    if(SDL_RenderCopy(renderer,mainMenu->player1Texture,NULL,&(mainMenu->player1Rect))!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du texte player 1 sur le rendu");
+        return(EXIT_FAILURE);
+    }
+    if(SDL_RenderCopy(renderer,mainMenu->player2Texture,NULL,&(mainMenu->player2Rect))!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du texte player 2 sur le rendu");
+        return(EXIT_FAILURE);
+    }
+    if(SDL_RenderCopy(renderer,mainMenu->playerVsAiTexture,NULL,&(mainMenu->playerVsAiRect))!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du texte PvAi sur le rendu");
+        return(EXIT_FAILURE);
+    }
+    if(SDL_RenderCopy(renderer,mainMenu->optionsTexture,NULL,&(mainMenu->optionsRect))!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du texte Option sur le rendu");
+        return(EXIT_FAILURE);
+    }
+
+    if(SDL_RenderCopy(renderer,mainMenu->scoresTexture,NULL,&(mainMenu->scoresRect))!=EXIT_SUCCESS){
+        logSDLError("Echec lors de la copie du texte score sur le rendu");
+        return(EXIT_FAILURE);
+    }
     return(EXIT_SUCCESS);
 }

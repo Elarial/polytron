@@ -10,6 +10,9 @@ typedef struct{
 }GRID;
 typedef struct{
     int id;
+    int posX;
+    int posY;
+    int direction;
     SDL_Color color;
 }PLAYER;
 typedef enum{
@@ -22,10 +25,31 @@ typedef enum{
     player1,
     player2
 }PLAYERID;
-
+typedef enum{
+    up,
+    down,
+    left,
+    right
+}DIRECTION;
+typedef enum{
+    p1DefaultposX = 10,
+    p1DefaultposY = 10,
+    p2DefaultposX = 500,
+    p2DefaultposY = 400
+}INITPOSITION;
+typedef struct{
+    GRID grid;
+    PLAYER players[2];
+    int nbPlayers;
+}MODEL;
 void displayGrid(GRID *grid);
-GRID initGridArray(int height, int width);
+GRID initGrid(int height, int width);
 void freeGridArray(GRID grid);
 PLAYER initPlayer(int playerId);
+MODEL initModel();
+int updateModel(MODEL *model,SDL_Renderer *renderer);
+int updateDirection(MODEL *model, SDL_Keycode input);
+int checkCollisions(MODEL *model);
+void resetModel(MODEL *model);
 #endif // MODEL_H
 

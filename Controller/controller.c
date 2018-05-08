@@ -52,6 +52,7 @@ int runListeners(SDLcontext *context){
     int activeView = 0;
     SDL_Event event = {0};
     MAINMENU mainMenu = initMainMenu(context);
+    MODEL model = initModel();
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -61,25 +62,28 @@ int runListeners(SDLcontext *context){
             //Mettre à jour le clip en fonction de l'input
             if(event.type == SDL_KEYDOWN){
                 switch (event.key.keysym.sym) {
+
+                if (activeView == solo){
+                    updateDirection(&model,event.key.keysym.sym);
+                }else{
                 case SDLK_UP:
-                    ctr--;
-                    break;
-                case SDLK_LEFT:
-                    break;
-                case SDLK_DOWN:
-                    ctr++;
-                    break;
-                case SDLK_RIGHT:
-                    break;
-                case SDLK_a:
-                    activeView = ctr + 1;
-                    break;
-                case SDLK_ESCAPE:
-                    end=1;
-                    break;
-                default:
-                    break;
+                        ctr--;
+                        break;
+                    case SDLK_DOWN:
+                        ctr++;
+                        break;
+                    case SDLK_a:
+                        activeView = ctr + 1;
+                        SDL_RenderClear(*(context->renderer));
+                        break;
+                    case SDLK_ESCAPE:
+                        end=1;
+                        break;
+                    default:
+                        break;
                 }
+                }
+
             }
             if(ctr<0){
                 ctr=4;
@@ -89,14 +93,23 @@ int runListeners(SDLcontext *context){
             }
         }
         //Mise à jour de la vue.
-        SDL_RenderClear(*(context->renderer));
+
         switch (activeView) {
-        case 0:
+        case main_menu:
+            SDL_RenderClear(*(context->renderer));
             renderMainMenu(&mainMenu,ctr,*(context->renderer));
+            SDL_RenderPresent(*(context->renderer));
+            SDL_Delay(10);
             break;
-        case 1:
-            logSDLError("Not implemented");
-            activeView = 0;
+        case solo:
+            if(checkCollisions(&model) != -1){
+                freeGridArray(model.grid);
+                resetModel(&model);
+                activeView=0;
+            }
+            updateModel(&model,*(context->renderer));
+            SDL_RenderPresent(*(context->renderer));
+            SDL_Delay(10);
             break;
         case 2:
             logSDLError("Not implemented");
@@ -119,6 +132,7 @@ int runListeners(SDLcontext *context){
         }
         SDL_RenderPresent(*(context->renderer));
     }
+
     SDL_DestroyWindow(*(context->window));
     SDL_DestroyRenderer(*(context->renderer));
     SDL_Quit();
