@@ -1,9 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 #include <SDL2/SDL.h>
-
+/**
+  *\brief Type représentant la grille de jeu.
+  */
 typedef struct{
-    int height;
+    int height; /**< */
     int width;
     int **gridArray;
 

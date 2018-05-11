@@ -3,11 +3,20 @@
 #include <SDL2/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <stdlib.h>
+#include "tools.h"
 
 void logSDLError(char* message){
     fprintf(stderr,"Erreur : %s\nErreur SDL : %s\n",message,SDL_GetError());
 }
-SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSize,SDL_Renderer **renderer){
+TEXT initTexte(char* message,char* fontFile,SDL_Color textColor,int fontSize,SDL_Renderer *renderer){
+    SDL_Texture *texture = NULL;
+    texture = renderText(message,fontFile,textColor,fontSize,renderer);
+    SDL_Rect textRect = createRectFromTexture(texture);
+    TEXT text = {message,textRect,texture,textColor,fontSize};
+    return text;
+}
+
+SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer){
     //On ouvre le fichier font
     TTF_Font *font = TTF_OpenFont(fontFile,fontSize);
     if(font==NULL){
@@ -20,7 +29,7 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
         logSDLError("Erreur lors de la création de la surface à partir de la font");
         return NULL;
     }
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(*renderer,surface);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer,surface);
     if(texture == NULL){
         logSDLError("Erreur lors de la création de la texture à partir de la suface font");
     }
@@ -29,7 +38,33 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
     return texture;
 
 }
-int renderTexture(SDL_Texture* texture,SDL_Renderer** renderer,SDL_Rect* srcRect, SDL_Rect* dstRect){
+int renderTexts (SDL_Texture* textures[], char* messages[],char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer,int nbElements){
+    TTF_Font *font = TTF_OpenFont(fontFile,fontSize);
+    if(font==NULL){
+        logSDLError("Erreur lors de la création de la font");
+        return EXIT_FAILURE;
+    }
+    for (int i = 0; i < nbElements; ++i) {
+        SDL_Surface *surface = TTF_RenderText_Blended(font,messages[i],color);
+        if(surface == NULL){
+            TTF_CloseFont(font);
+            logSDLError("Erreur lors de la création de la surface à partir de la font");
+            return EXIT_FAILURE;
+        }
+        textures[i] = SDL_CreateTextureFromSurface(renderer,surface);
+        if(textures[i] == NULL){
+            logSDLError("Erreur lors de la création de la texture à partir de la suface font");
+            SDL_FreeSurface(surface);
+            TTF_CloseFont(font);
+            return(EXIT_SUCCESS);
+        }
+        SDL_FreeSurface(surface);
+    }
+    TTF_CloseFont(font);
+    return(EXIT_SUCCESS);
+}
+
+int renderTexture(SDL_Texture* texture,SDL_Renderer* renderer,SDL_Rect* srcRect, SDL_Rect* dstRect){
     if(srcRect != NULL && dstRect != NULL){
         if (SDL_RectEmpty(srcRect) && SDL_RectEmpty(dstRect)){
             logSDLError("Rendu de texture impossible\nLes rectangles de source et de destination sont vides");
@@ -46,7 +81,7 @@ int renderTexture(SDL_Texture* texture,SDL_Renderer** renderer,SDL_Rect* srcRect
             dstRect->h = srcRect->h;
         }
     }
-    SDL_RenderCopy(*renderer,texture,srcRect,dstRect);
+    SDL_RenderCopy(renderer,texture,srcRect,dstRect);
     return(EXIT_SUCCESS);
 }
 
@@ -58,11 +93,11 @@ void computeSpritesRects(SDL_Rect clips[],int nbClips,int clipWidth,int clipHeig
         clips[i].h=clipHeight;
     }
 }
-SDL_Texture* loadTextureImg(char* pathFile, SDL_Renderer** renderer){
+SDL_Texture* loadTextureImg(char* pathFile, SDL_Renderer* renderer){
     //On initialise le pointeur à NULL pour éviter les problèmes.
     SDL_Texture *texture = NULL;
     //On charge l'image
-    texture = IMG_LoadTexture(*renderer,pathFile);
+    texture = IMG_LoadTexture(renderer,pathFile);
     if(texture == NULL){
         logSDLError("Erreur lors du chargement de la texture.");
         return NULL;

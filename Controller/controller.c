@@ -7,7 +7,10 @@
 #include "controller.h"
 #include "../Vues/mainMenu.h"
 #include "../Vues/gameArea.h"
+#include "../Vues/options.h"
 #include "../Model/model.h"
+#include "../Model/mainmenumodel.h"
+#include "../Model/optionsmodel.h"
 
 
 int initializeController(SDLcontext *context){
@@ -48,10 +51,12 @@ int initializeSDLttf(){
 }
 int runListeners(SDLcontext *context){
     int end = 0;
-    int ctr = 0;
-    int activeView = 0;
+    int ctrMainMenu = 0;
+    int ctrOptionsMenu = 0;
+    int activeView = main_menu;
     SDL_Event event = {0};
     MAINMENU mainMenu = initMainMenu(context);
+    MENU_OPTIONS optionsMenu = initMenuOptions(context);
     MODEL model = initModel();
     while(end == 0){
         while (SDL_PollEvent(&event)){
@@ -59,80 +64,68 @@ int runListeners(SDLcontext *context){
             if (event.type == SDL_QUIT){
                 end = 1;
             }
-            //Mettre à jour le clip en fonction de l'input
+            //Mettre à jour le jeu en fonction de l'input
             if(event.type == SDL_KEYDOWN){
-                switch (event.key.keysym.sym) {
-
-                if (activeView == solo){
+                if(event.key.keysym.sym == SDLK_ESCAPE){
+                    end = 1;
+                }
+                switch (activeView) {
+                case main_menu:
+                    activeView = updateMainMenu(&ctrMainMenu,event.key.keysym.sym);
+                    renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
+                    SDL_RenderPresent(*(context->renderer));
+                    SDL_RenderClear(*(context->renderer));
+                    break;
+                case solo:
                     updateDirection(&model,event.key.keysym.sym);
-                }else{
-                case SDLK_UP:
-                        ctr--;
-                        break;
-                    case SDLK_DOWN:
-                        ctr++;
-                        break;
-                    case SDLK_a:
-                        activeView = ctr + 1;
-                        SDL_RenderClear(*(context->renderer));
-                        break;
-                    case SDLK_ESCAPE:
-                        end=1;
-                        break;
-                    default:
-                        break;
+                case options:
+                    updateOptionsMenu(&ctrOptionsMenu,event.key.keysym.sym);
+                    renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
+                    SDL_RenderPresent(*(context->renderer));
+                    SDL_RenderClear(*(context->renderer));
+                    break;
+                default:
+                    break;
                 }
-                }
-
-            }
-            if(ctr<0){
-                ctr=4;
-            }
-            if(ctr>4){
-                ctr=0;
             }
         }
-        //Mise à jour de la vue.
-
+        //Boucle d'itération du jeu
         switch (activeView) {
         case main_menu:
-            SDL_RenderClear(*(context->renderer));
-            renderMainMenu(&mainMenu,ctr,*(context->renderer));
-            SDL_RenderPresent(*(context->renderer));
+            renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
             SDL_Delay(10);
             break;
         case solo:
             if(checkCollisions(&model) != -1){
                 freeGridArray(model.grid);
                 resetModel(&model);
-                activeView=0;
+                activeView = main_menu;
             }
             updateModel(&model,*(context->renderer));
             SDL_RenderPresent(*(context->renderer));
             SDL_Delay(10);
             break;
-        case 2:
-            logSDLError("Not implemented");
-            activeView = 0;
+        case VS:
+            logSDLError("Not Implemented");
+            activeView = main_menu;
             break;
-        case 3:
-            logSDLError("Not implemented");
-            activeView = 0;
+        case pVsAi:
+            logSDLError("Not Implemented");
+            activeView = main_menu;
             break;
-        case 4:
-            logSDLError("Not implemented");
-            activeView = 0;
+        case options:
+            renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
+            SDL_Delay(10);
             break;
-        case 5:
-            logSDLError("Not implemented");
-            activeView = 0;
+        case scores:
+            logSDLError("Not Implemented");
+            activeView = main_menu;
             break;
         default:
             break;
         }
         SDL_RenderPresent(*(context->renderer));
     }
-
     SDL_DestroyWindow(*(context->window));
     SDL_DestroyRenderer(*(context->renderer));
     SDL_Quit();

@@ -19,16 +19,16 @@ MAINMENU initMainMenu(SDLcontext *context){
     char* playerVsAiText = "VERSUS IA";
     char* optionsText = "OPTIONS";
     char* scoresText = "SCORES";
-    backgroundTexture = loadTextureImg(pathBackground,context->renderer);
-    player1Texture = renderText(player1Text,pathTTF,defaultColor,fontSize,context->renderer);
+    backgroundTexture = loadTextureImg(pathBackground,*(context->renderer));
+    player1Texture = renderText(player1Text,pathTTF,defaultColor,fontSize,*(context->renderer));
     SDL_Rect player1Rect = createRectFromTexture(player1Texture);
-    player2Texture = renderText(player2Text,pathTTF,defaultColor,fontSize,context->renderer);
+    player2Texture = renderText(player2Text,pathTTF,defaultColor,fontSize,*(context->renderer));
     SDL_Rect player2Rect = createRectFromTexture(player2Texture);
-    playerVsAiTexture = renderText(playerVsAiText,pathTTF,defaultColor,fontSize,context->renderer);
+    playerVsAiTexture = renderText(playerVsAiText,pathTTF,defaultColor,fontSize,*(context->renderer));
     SDL_Rect playerVsAiRect = createRectFromTexture(playerVsAiTexture);
-    optionsTexture = renderText(optionsText,pathTTF,defaultColor,fontSize,context->renderer);
+    optionsTexture = renderText(optionsText,pathTTF,defaultColor,fontSize,*(context->renderer));
     SDL_Rect optionsRect = createRectFromTexture(optionsTexture);
-    scoresTexture = renderText(scoresText,pathTTF,defaultColor,fontSize,context->renderer);
+    scoresTexture = renderText(scoresText,pathTTF,defaultColor,fontSize,*(context->renderer));
     SDL_Rect scoresRect = createRectFromTexture(scoresTexture) ;
     //Todo: outline
     int xCenter,yCenter,offsetInit,offset;
@@ -76,30 +76,30 @@ int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
     }else{
         //Changement de la couleur du texte en fontion de l'input
         switch (ctr) {
-        case 0:
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        case mainMenuSolo:
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
             break;
-        case 1:
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        case mainMenuPvp:
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
             break;
-        case 2:
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        case mainMenuPvAi:
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
             break;
-        case 3:
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        case mainMenuOptions:
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
             break;
-        case 4:
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,&renderer);
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,&renderer);
+        case mainMenuScores:
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
         default:
             break;
         }
@@ -109,7 +109,7 @@ int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
 
     //Copie sur le rendu.
     if(SDL_RenderCopy(renderer,mainMenu->backgroundTexture,NULL,NULL)!=EXIT_SUCCESS){
-        logSDLError("Echec lors de la copie du backgournd sur le rendu");
+        logSDLError("Echec lors de la copie du background sur le rendu");
         return(EXIT_FAILURE);
     }
     if(SDL_RenderCopy(renderer,mainMenu->player1Texture,NULL,&(mainMenu->player1Rect))!=EXIT_SUCCESS){
