@@ -1,6 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 #include <SDL2/SDL.h>
+
+#define p1DefaultposX  (10)
+#define p1DefaultposY (10)
+#define p2DefaultposX (500)
+#define p2DefaultposY (400)
 /**
   *\brief Type représentant la grille de jeu.
   */
@@ -12,9 +17,15 @@ typedef struct{
 }GRID;
 typedef struct{
     int id;
+    char* name;
+    int score;
     int posX;
     int posY;
     int direction;
+    SDL_Keycode keyUp;
+    SDL_Keycode keyDown;
+    SDL_Keycode keyLeft;
+    SDL_Keycode keyRight;
     SDL_Color color;
 }PLAYER;
 typedef enum{
@@ -33,12 +44,6 @@ typedef enum{
     left,
     right
 }DIRECTION;
-typedef enum{
-    p1DefaultposX = 10,
-    p1DefaultposY = 10,
-    p2DefaultposX = 500,
-    p2DefaultposY = 400
-}INITPOSITION;
 typedef struct{
     GRID grid;
     PLAYER players[2];

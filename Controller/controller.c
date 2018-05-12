@@ -22,7 +22,7 @@ int initializeController(SDLcontext *context){
 }
 
 int initializeSDLcontexte(SDL_Window **window, SDL_Renderer **renderer,int posX,int posY,int width,int height){
-    if(SDL_Init(SDL_INIT_VIDEO) != EXIT_SUCCESS){
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != EXIT_SUCCESS){
         logSDLError("Erreur lors de l'initialisation de SDL");
         return(EXIT_FAILURE);
     }
@@ -54,6 +54,7 @@ int runListeners(SDLcontext *context){
     int ctrMainMenu = 0;
     int ctrOptionsMenu = 0;
     int activeView = main_menu;
+    int speed = NORMAL;
     SDL_Event event = {0};
     MAINMENU mainMenu = initMainMenu(context);
     MENU_OPTIONS optionsMenu = initMenuOptions(context);
@@ -75,11 +76,16 @@ int runListeners(SDLcontext *context){
                     renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
+
                     break;
                 case solo:
                     updateDirection(&model,event.key.keysym.sym);
+                    break;
+                case VS:
+                    updateDirection(&model,event.key.keysym.sym);
+                    break;
                 case options:
-                    updateOptionsMenu(&ctrOptionsMenu,event.key.keysym.sym);
+                    updateOptionsMenu(&ctrOptionsMenu,&activeView,&model,event.key.keysym.sym,&speed,&optionsMenu,*(context->renderer));
                     renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
@@ -96,6 +102,7 @@ int runListeners(SDLcontext *context){
             SDL_Delay(10);
             break;
         case solo:
+            model.nbPlayers=1;
             if(checkCollisions(&model) != -1){
                 freeGridArray(model.grid);
                 resetModel(&model);
@@ -103,11 +110,18 @@ int runListeners(SDLcontext *context){
             }
             updateModel(&model,*(context->renderer));
             SDL_RenderPresent(*(context->renderer));
-            SDL_Delay(10);
+            SDL_Delay(speed);
             break;
         case VS:
-            logSDLError("Not Implemented");
-            activeView = main_menu;
+            model.nbPlayers=2;
+            if(checkCollisions(&model) != -1){
+                freeGridArray(model.grid);
+                resetModel(&model);
+                activeView = main_menu;
+            }
+            updateModel(&model,*(context->renderer));
+            SDL_RenderPresent(*(context->renderer));
+            SDL_Delay(speed);
             break;
         case pVsAi:
             logSDLError("Not Implemented");
@@ -126,8 +140,10 @@ int runListeners(SDLcontext *context){
         }
         SDL_RenderPresent(*(context->renderer));
     }
-    SDL_DestroyWindow(*(context->window));
+    //Détruire le renderer détruit également les textures associées.
     SDL_DestroyRenderer(*(context->renderer));
+    SDL_DestroyWindow(*(context->window));
+    IMG_Quit();
     SDL_Quit();
 
     return EXIT_SUCCESS;

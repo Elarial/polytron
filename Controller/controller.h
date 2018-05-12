@@ -23,6 +23,14 @@ typedef enum{
     options, /**<Mode options */
     scores /**<Mode scores */
 }ACTIVEVIEW;
+/**
+  * \brief Enumération des vitesses de jeu possible (rafraichissement en ms)
+  */
+typedef enum{
+    NORMAL = 10,
+    FAST = 5,
+    SUPA_FAST = 2
+}SPEED_VALUE;
 ///
 /// \brief initializeController : Initialise tous les modules nécéssaires au fonctionnement.
 /// \param context : contexte d'exectution du programme.

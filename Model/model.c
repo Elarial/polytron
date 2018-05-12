@@ -58,18 +58,24 @@ int updateModel(MODEL *model, SDL_Renderer *renderer){
             break;
         }
 
+        model->players[p].score += 1;
     }
     return(EXIT_SUCCESS);
 }
+//TODO : check draw gamu.
 int checkCollisions(MODEL *model){
     for (int p = 0; p < model->nbPlayers; ++p) {
         if(model->players[p].id == player1 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] != isEmpty){
             printf("%d",model->grid.gridArray[model->players[p].posX][model->players[p].posY]);
-            printf("player2");
+            puts("player2");
+            printf("SCORE P1 : %d\n",model->players[0].score);
+            printf("SCORE P2 : %d\n",model->players[1].score);
             return player2;
         }
         else if(model->players[p].id == player2 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] != isEmpty){
-            printf("player1");
+            puts("player1");
+            printf("SCORE P1 : %d\n",model->players[0].score);
+            printf("SCORE P2 : %d\n",model->players[1].score);
             return player1;
         }
     }
@@ -78,62 +84,24 @@ int checkCollisions(MODEL *model){
 
 int updateDirection(MODEL *model, SDL_Keycode input){
     for (int p = 0; p < model->nbPlayers; ++p) {
-        if(model->players[p].id==player1){
-            switch (input) {
-            case SDLK_UP:
-                if(model->players[p].direction != down){
-                    model->players[p].direction = up;
-                }
-                break;
-            case SDLK_LEFT:
-                if(model->players[p].direction != right){
-                    model->players[p].direction = left;
-                }
-                break;
-            case SDLK_DOWN:
-                if(model->players[p].direction != up){
-                    model->players[p].direction = down;
-                }
-                break;
-            case SDLK_RIGHT:
-                if(model->players[p].direction != left){
-                    model->players[p].direction = right;
-                }
-                break;
-            default:
-                break;
-            }
-        }else if(model->players[p].id==player2){
-            switch(input){
-            case SDLK_z:
-                if(model->players[p].direction != down){
-                    model->players[p].direction = up;
-                }
-                break;
-            case SDLK_q:
-                if(model->players[p].direction != right){
-                    model->players[p].direction = left;
-                }
-                break;
-            case SDLK_s:
-                if(model->players[p].direction != up){
-                    model->players[p].direction = down;
-                }
-                break;
-            case SDLK_d:
-                if(model->players[p].direction != left){
-                    model->players[p].direction = right;
-                }
-                break;
-            default:
-                break;
-            }
-        }else{
-            logSDLError("Erreur Id du joueur non reconnu");
-            return(EXIT_FAILURE);
+        if(input == model->players[p].keyUp && model->players[p].direction != down){
+            model->players[p].direction = up;
+            return(EXIT_SUCCESS);
+        }
+        else if(input == model->players[p].keyLeft && model->players[p].direction != right){
+            model->players[p].direction = left;
+            return(EXIT_SUCCESS);
+        }
+        else if(input == model->players[p].keyDown && model->players[p].direction != up){
+            model->players[p].direction = down;
+            return(EXIT_SUCCESS);
+        }
+        else if(input == model->players[p].keyRight && model->players[p].direction != left){
+            model->players[p].direction = right;
+            return(EXIT_SUCCESS);
         }
     }
-    return(EXIT_SUCCESS);
+    return(EXIT_FAILURE);
 }
 
 void freeGridArray(GRID grid){
@@ -146,6 +114,7 @@ void freeGridArray(GRID grid){
 }
 PLAYER initPlayer(int playerId){
     PLAYER player;
+    //TODO faire au propre
     int p1InitposX = p1DefaultposX;
     int p1InitposY = p1DefaultposY;
     int p2InitposX = p2DefaultposX;
@@ -154,17 +123,29 @@ PLAYER initPlayer(int playerId){
     if(playerId == player1){
         player.id=player1;
         SDL_Color color={0,0,255,SDL_ALPHA_OPAQUE};
+        player.score = 0;
         player.color = color;
         player.posX = p1InitposX;
         player.posY = p1InitposY;
         player.direction = right;
+        player.name = "Sonic";
+        player.keyUp = SDLK_UP;
+        player.keyLeft = SDLK_LEFT;
+        player.keyDown = SDLK_DOWN;
+        player.keyRight = SDLK_RIGHT;
     }else if (playerId == player2){
         player.id=player2;
         SDL_Color color = {255,205,0,SDL_ALPHA_OPAQUE};
+        player.score = 0;
         player.color = color;
         player.posX = p2InitposX;
         player.posY = p2InitposY;
         player.direction = left;
+        player.name = "Tails";
+        player.keyUp = SDLK_z;
+        player.keyLeft = SDLK_q;
+        player.keyDown = SDLK_s;
+        player.keyRight = SDLK_d;
     }else{
         logSDLError("Erreur lors de l'initialisation du joueur : Id non reconnu");
     }
@@ -182,11 +163,12 @@ MODEL initModel(){
 void resetModel(MODEL *model){
     model->grid = initGrid(640,480);
     for (int p = 0; p < model->nbPlayers; ++p) {
+        model->players[p].score=0;
         if(model->players[p].id==player1){
             model->players[p].posX = p1DefaultposX;
             model->players[p].posY = p1DefaultposY;
             model->players[p].direction = right;
-        }else if(model->players[p].id==player1){
+        }else if(model->players[p].id==player2){
             model->players[p].posX = p2DefaultposX;
             model->players[p].posY = p2DefaultposY;
             model->players[p].direction =left;

@@ -30,12 +30,15 @@ typedef struct {
     int fontSize; /**<Taille des textes. */
 
 }MAINMENU;
+/**
+  *\brief Enum représentant la position du curseur de sélection du menu principal.
+  */
 typedef enum{
-    mainMenuSolo=0,
-    mainMenuPvp,
-    mainMenuPvAi,
-    mainMenuOptions,
-    mainMenuScores
+    mainMenuSolo=0, /**<Curseur sur le menu SOLO */
+    mainMenuPvp, /**<Curseur sur le menu joueur contre joueur */
+    mainMenuPvAi, /*<Curseur sur le menu joueur contre IA */
+    mainMenuOptions, /*Curseur sur le menu Options */
+    mainMenuScores /*Curseur sur le menu Scores */
 }MAINMENU_POS;
 ///
 /// \brief initMainMenu : Permet d'initialiser le menu principal.
