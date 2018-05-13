@@ -46,7 +46,7 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
 /// \param renderer : Rendu dans lequel sera affiché la texture.
 /// \param nbElements : Le nombre d'éléments qui sera généré.
 ///
-int renderTexts (SDL_Texture* textures[], char* messages[],char* fontfile,SDL_Color color,int fontSize,SDL_Renderer *renderer,int nbElements);
+int renderTexts (SDL_Texture* textures[], char messages[][30],char* fontfile,SDL_Color color,int fontSize,SDL_Renderer *renderer,int nbElements);
 ///
 /// \brief createRectFromTexture : Créé un rectangle de la taille d'une texture.
 /// \param texture : La texture dont la taille devra être mesuré.

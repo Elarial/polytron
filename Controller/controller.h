@@ -21,7 +21,7 @@ typedef enum{
     VS, /**<Mode 2 joueurs */
     pVsAi, /**<Mode 1 joueur contre IA */
     options, /**<Mode options */
-    scores /**<Mode scores */
+    scores_menu /**<Mode scores */
 }ACTIVEVIEW;
 /**
   * \brief Enumération des vitesses de jeu possible (rafraichissement en ms)

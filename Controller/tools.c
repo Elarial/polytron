@@ -38,7 +38,7 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
     return texture;
 
 }
-int renderTexts (SDL_Texture* textures[], char* messages[],char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer,int nbElements){
+int renderTexts (SDL_Texture* textures[], char messages[][30],char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer,int nbElements){
     TTF_Font *font = TTF_OpenFont(fontFile,fontSize);
     if(font==NULL){
         logSDLError("Erreur lors de la création de la font");

@@ -8,9 +8,11 @@
 #include "../Vues/mainMenu.h"
 #include "../Vues/gameArea.h"
 #include "../Vues/options.h"
+#include "../Vues/scores.h"
 #include "../Model/model.h"
 #include "../Model/mainmenumodel.h"
 #include "../Model/optionsmodel.h"
+#include "../Model/scoresmodel.h"
 
 
 int initializeController(SDLcontext *context){
@@ -59,6 +61,14 @@ int runListeners(SDLcontext *context){
     MAINMENU mainMenu = initMainMenu(context);
     MENU_OPTIONS optionsMenu = initMenuOptions(context);
     MODEL model = initModel();
+    SCORE scores[10]={0};
+    FILE scoreFile;
+
+    //TODO : vérifier algo d'insertion des scores.
+    //initScoreforTests(scores);
+    //writeScoreFile(scores,&scoreFile);
+
+    readScoreFile(scores,&scoreFile);
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -76,7 +86,6 @@ int runListeners(SDLcontext *context){
                     renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
-
                     break;
                 case solo:
                     updateDirection(&model,event.key.keysym.sym);
@@ -89,6 +98,9 @@ int runListeners(SDLcontext *context){
                     renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
+                    break;
+                case scores_menu:
+                    initScoresDisplay(context,scores);
                     break;
                 default:
                     break;
@@ -104,6 +116,9 @@ int runListeners(SDLcontext *context){
         case solo:
             model.nbPlayers=1;
             if(checkCollisions(&model) != -1){
+                SCORE newScore=createScore(&(model.players[0]));
+                insertScore(scores,newScore);
+                writeScoreFile(scores,&scoreFile);
                 freeGridArray(model.grid);
                 resetModel(&model);
                 activeView = main_menu;
@@ -131,9 +146,8 @@ int runListeners(SDLcontext *context){
             renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
             SDL_Delay(10);
             break;
-        case scores:
-            logSDLError("Not Implemented");
-            activeView = main_menu;
+        case scores_menu:
+
             break;
         default:
             break;
