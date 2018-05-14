@@ -1,6 +1,5 @@
 #ifndef GAMEAREA_H
 #define GAMEAREA_H
-#include <SDL2/SDL.h>
 #include "../Controller/controller.h"
 #include "../Model/model.h"
 /**

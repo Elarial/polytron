@@ -1,14 +1,16 @@
 #ifndef TOOLS_H
 #define TOOLS_H
-
-#include <SDL2/SDL.h>
 #include"controller.h"
+/**
+  * \brief Type représentant un texte qui sera affiché sur un rendu
+  */
 typedef struct{
-    char* text;
-    SDL_Rect textRect;
-    SDL_Texture *textTexture;
-    SDL_Color textColor;
-    int fontSize;
+    char* text; /** < chaine de caractères à afficher */
+    SDL_Rect textRect; /**< Rectangle dans lequel sera affiché le rectangle */
+    SDL_Texture *textTexture; /**< La texture qui sera affiché sur le rendu */
+    SDL_Color textColor; /**< La couleur de la texture affiché */
+    int fontSize; /**< La taille de la font qui sera affiché*/
+    //TODO : remplacer fontSize par le type TTF_Font
 }TEXT;
 ///
 /// \brief initTexte : Initialise la structure TEXTE : Affiche un texte aux coordonnées 0;0 par défaut.
@@ -42,7 +44,7 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
 /// \param messages : Le tableau de textes sources.
 /// \param fontfile : Chemin du fichier contenant la font.
 /// \param color : La couleur du texte qui sera affiché.
-/// \param fontSize : La taille du texte qui sera affiché.
+/// \param fontSize : La taille du texte qui sera affiché.SDL_Texture
 /// \param renderer : Rendu dans lequel sera affiché la texture.
 /// \param nbElements : Le nombre d'éléments qui sera généré.
 ///

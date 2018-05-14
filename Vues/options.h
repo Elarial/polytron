@@ -1,6 +1,5 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
-#include <SDL2/SDL.h>
 #include "../Controller/tools.h"
 /**
   * \brief Structure représentant le menu options.

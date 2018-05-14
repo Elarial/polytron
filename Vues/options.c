@@ -1,7 +1,5 @@
 #include "options.h"
 #include "../Model/optionsmodel.h"
-#include <SDL2/SDL.h>
-#include "../Controller/controller.h"
 #include "../Controller/tools.h"
 MENU_OPTIONS initMenuOptions(SDLcontext *context){
     //Initialisation du menu options

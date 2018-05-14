@@ -13,5 +13,6 @@ int writeScoreFile(SCORE scores[],FILE *scoreFile);
 SCORE createScore (PLAYER *player);
 void insertScore(SCORE scores[10],SCORE score);
 void initScoreforTests(SCORE scores[10]);
+void updateScoresMenu(int *activeView,SDL_Keycode input);
 #endif // SCOREMODEL_H
 

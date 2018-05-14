@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL/SDL_ttf.h>
 #include <stdlib.h>
 #include "tools.h"
 
@@ -45,21 +42,24 @@ int renderTexts (SDL_Texture* textures[], char messages[][30],char* fontFile,SDL
         return EXIT_FAILURE;
     }
     for (int i = 0; i < nbElements; ++i) {
-        SDL_Surface *surface = TTF_RenderText_Blended(font,messages[i],color);
-        if(surface == NULL){
-            TTF_CloseFont(font);
-            logSDLError("Erreur lors de la création de la surface à partir de la font");
-            return EXIT_FAILURE;
-        }
-        textures[i] = SDL_CreateTextureFromSurface(renderer,surface);
-        if(textures[i] == NULL){
-            logSDLError("Erreur lors de la création de la texture à partir de la suface font");
+        if(strlen(messages[i])!=0){
+            SDL_Surface *surface = TTF_RenderText_Blended(font,messages[i],color);
+            if(surface == NULL){
+                TTF_CloseFont(font);
+                logSDLError("Erreur lors de la création de la surface à partir de la font");
+                return EXIT_FAILURE;
+            }
+            textures[i] = SDL_CreateTextureFromSurface(renderer,surface);
+            if(textures[i] == NULL){
+                logSDLError("Erreur lors de la création de la texture à partir de la suface font");
+                SDL_FreeSurface(surface);
+                TTF_CloseFont(font);
+                return(EXIT_SUCCESS);
+            }
             SDL_FreeSurface(surface);
-            TTF_CloseFont(font);
-            return(EXIT_SUCCESS);
         }
-        SDL_FreeSurface(surface);
     }
+
     TTF_CloseFont(font);
     return(EXIT_SUCCESS);
 }
@@ -106,11 +106,11 @@ SDL_Texture* loadTextureImg(char* pathFile, SDL_Renderer* renderer){
 }
 SDL_Rect createRectFromTexture(SDL_Texture* texture){
     if(texture == NULL){
-        logSDLError("Erreur lors de la création du rectangle");
+        logSDLError("Texture vide, création de rectangle impossible");
         SDL_Rect rect = {0,0,0,0};
         return rect;
     }
-    int iw,ih;    
+    int iw,ih;
     if(SDL_QueryTexture(texture,NULL,NULL,&iw,&ih)!=EXIT_SUCCESS){
         logSDLError("Erreur lors de l'execution de la requète à la texture.");
     }

@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL/SDL_ttf.h>
 #include <stdlib.h>
 #include "tools.h"
 #include "controller.h"
@@ -63,12 +60,13 @@ int runListeners(SDLcontext *context){
     MODEL model = initModel();
     SCORE scores[10]={0};
     FILE scoreFile;
-
+    readScoreFile(scores,&scoreFile);
+    SCORES_DISPLAY scoresMenu = initScoresDisplay(context,scores);
     //TODO : vérifier algo d'insertion des scores.
     //initScoreforTests(scores);
     //writeScoreFile(scores,&scoreFile);
 
-    readScoreFile(scores,&scoreFile);
+
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -100,7 +98,7 @@ int runListeners(SDLcontext *context){
                     SDL_RenderClear(*(context->renderer));
                     break;
                 case scores_menu:
-                    initScoresDisplay(context,scores);
+                    updateScoresMenu(&activeView,event.key.keysym.sym);
                     break;
                 default:
                     break;
@@ -119,6 +117,7 @@ int runListeners(SDLcontext *context){
                 SCORE newScore=createScore(&(model.players[0]));
                 insertScore(scores,newScore);
                 writeScoreFile(scores,&scoreFile);
+                updateScores(scores,&(scoresMenu),context);
                 freeGridArray(model.grid);
                 resetModel(&model);
                 activeView = main_menu;
@@ -144,10 +143,11 @@ int runListeners(SDLcontext *context){
             break;
         case options:
             renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
-            SDL_Delay(10);
+            SDL_Delay(50);
             break;
         case scores_menu:
-
+            renderScoresDisplay(scoresMenu,*(context->renderer));
+            SDL_Delay(50);
             break;
         default:
             break;

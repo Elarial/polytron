@@ -1,6 +1,5 @@
 #ifndef OPTIONSMODEL_H
 #define OPTIONSMODEL_H
-#include <SDL2/SDL.h>
 #include "../Vues/options.h"
 #include "../Model/model.h"
 #include "../Controller/controller.h"

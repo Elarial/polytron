@@ -1,6 +1,5 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
-#include <SDL2/SDL.h>
 #include "../Controller/controller.h"
 /**
   *\brief Type décrivant le menu principal.

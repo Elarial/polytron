@@ -1,5 +1,4 @@
 #include "mainMenu.h"
-#include <SDL2/SDL.h>
 #include "../Controller/tools.h"
 
 MAINMENU initMainMenu(SDLcontext *context){

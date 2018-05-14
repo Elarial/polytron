@@ -1,5 +1,10 @@
 #include "scoresmodel.h"
 
+void updateScoresMenu(int *activeView,SDL_Keycode input){
+    if(input == SDLK_a){
+        *activeView = main_menu;
+    }
+}
 int readScoreFile(SCORE scores[],FILE *scoreFile){
     scoreFile = fopen("scores.txt","r");
     if(scoreFile == NULL){
@@ -54,10 +59,12 @@ void insertScore(SCORE scores[10],SCORE score){
     }
     //On déplace les scores inferieurs au score du joueur
     for(int i = 9; i>j;--i){
+        strcpy(scores[i].name,scores[i-1].name);
         scores[i].score = scores[i-1].score;
-        scores[i].position = scores[i-1].score;
+        scores[i].position = i+1;
     }
     //On insère le score du joueur
+    strcpy(scores[j].name,score.name);
     scores[j].score=score.score;
     scores[j].position = j+1;
 }
