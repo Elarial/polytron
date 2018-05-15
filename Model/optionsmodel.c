@@ -1,15 +1,19 @@
 #include "optionsmodel.h"
 #include "string.h"
 
-void updateOptionsMenu(int *position,int *activeView,MODEL *model,SDL_Keycode input,int *speed,MENU_OPTIONS *menuOptions,SDL_Renderer *renderer){
+
+void updateOptionsMenu(int *position,int *activeView,MODEL *model,SDL_Keycode input,int *speed,MENU_OPTIONS *menuOptions,SDL_Renderer *renderer,GAMEMUSIC *gameMusic){
     switch (input) {
     case SDLK_DOWN:
+        Mix_PlayChannel(-1,gameMusic->menuCursor,0);
         *(position) = *position + 1;
         break;
     case SDLK_UP:
+        Mix_PlayChannel(-1,gameMusic->menuCursor,0);
         *(position) = *position - 1;
         break;
     case SDLK_a:
+        Mix_PlayChannel(-1,gameMusic->menuDecide,0);
         selectOptionsActions(position,activeView,speed,menuOptions,model,renderer);
     default:
         break;

@@ -2,24 +2,31 @@
 #include "mainmenumodel.h"
 #include "../Controller/controller.h"
 
-int updateMainMenu(int *position,SDL_Keycode input){
+int updateMainMenu(int *position,SDL_Keycode input,GAMEMUSIC *gameMusic){
     switch (input) {
     case SDLK_DOWN:
+        Mix_PlayChannel(-1,gameMusic->menuCursor,0);
         *(position) = *position + 1;
         break;
     case SDLK_UP:
+        Mix_PlayChannel(-1,gameMusic->menuCursor,0);
         *(position) = *position - 1;
         break;
     case SDLK_a:
-        return (*(position)+1);
+        Mix_PlayChannel(-1,gameMusic->menuDecide,0);
+        if(*(position) == solo||*(position) ==VS){
+            Mix_HaltMusic();
+            Mix_PlayMusic(gameMusic->inGameMusic,-1);
+        }
+        return *(position);
     default:
         break;
     }
-    if(*(position)<0){
-        *(position)=4;
+    if(*(position)<mainMenuSolo){
+        *(position)=mainMenuScores;
     }
-    if(*(position)>4){
-        *(position)=0;
+    if(*(position)>mainMenuScores){
+        *(position)=mainMenuSolo;
     }
     return main_menu;
 }

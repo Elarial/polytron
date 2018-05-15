@@ -33,7 +33,7 @@ typedef struct {
   *\brief Enum représentant la position du curseur de sélection du menu principal.
   */
 typedef enum{
-    mainMenuSolo=0, /**<Curseur sur le menu SOLO */
+    mainMenuSolo=1, /**<Curseur sur le menu SOLO */
     mainMenuPvp, /**<Curseur sur le menu joueur contre joueur */
     mainMenuPvAi, /*<Curseur sur le menu joueur contre IA */
     mainMenuOptions, /*Curseur sur le menu Options */

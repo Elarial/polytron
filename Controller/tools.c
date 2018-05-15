@@ -5,6 +5,7 @@
 void logSDLError(char* message){
     fprintf(stderr,"Erreur : %s\nErreur SDL : %s\n",message,SDL_GetError());
 }
+
 TEXT initTexte(char* message,char* fontFile,SDL_Color textColor,int fontSize,SDL_Renderer *renderer){
     SDL_Texture *texture = NULL;
     texture = renderText(message,fontFile,textColor,fontSize,renderer);

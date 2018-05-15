@@ -69,7 +69,7 @@ MAINMENU initMainMenu(SDLcontext *context){
 }
 
 int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
-    if(ctr<0 || ctr>4){
+    if(ctr<mainMenuSolo || ctr>mainMenuScores){
         logSDLError("Index de position invalide");
         return(EXIT_FAILURE);
     }else{

@@ -50,7 +50,7 @@ int initializeSDLttf(){
 }
 int runListeners(SDLcontext *context){
     int end = 0;
-    int ctrMainMenu = 0;
+    int ctrMainMenu = mainMenuSolo;
     int ctrOptionsMenu = 0;
     int activeView = main_menu;
     int speed = NORMAL;
@@ -62,11 +62,9 @@ int runListeners(SDLcontext *context){
     FILE scoreFile;
     readScoreFile(scores,&scoreFile);
     SCORES_DISPLAY scoresMenu = initScoresDisplay(context,scores);
-    //TODO : vérifier algo d'insertion des scores.
-    //initScoreforTests(scores);
-    //writeScoreFile(scores,&scoreFile);
+    GAMEMUSIC gameMusic = initGameMusic();
 
-
+    Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -80,7 +78,7 @@ int runListeners(SDLcontext *context){
                 }
                 switch (activeView) {
                 case main_menu:
-                    activeView = updateMainMenu(&ctrMainMenu,event.key.keysym.sym);
+                    activeView = updateMainMenu(&ctrMainMenu,event.key.keysym.sym,&gameMusic);
                     renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
@@ -92,13 +90,13 @@ int runListeners(SDLcontext *context){
                     updateDirection(&model,event.key.keysym.sym);
                     break;
                 case options:
-                    updateOptionsMenu(&ctrOptionsMenu,&activeView,&model,event.key.keysym.sym,&speed,&optionsMenu,*(context->renderer));
+                    updateOptionsMenu(&ctrOptionsMenu,&activeView,&model,event.key.keysym.sym,&speed,&optionsMenu,*(context->renderer),&gameMusic);
                     renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
                     break;
                 case scores_menu:
-                    updateScoresMenu(&activeView,event.key.keysym.sym);
+                    updateScoresMenu(&activeView,event.key.keysym.sym,&gameMusic);
                     break;
                 default:
                     break;
@@ -106,21 +104,24 @@ int runListeners(SDLcontext *context){
             }
         }
         //Boucle d'itération du jeu
+
         switch (activeView) {
-        case main_menu:
+          case main_menu:
             renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
             SDL_Delay(10);
             break;
         case solo:
             model.nbPlayers=1;
             if(checkCollisions(&model) != -1){
-                SCORE newScore=createScore(&(model.players[0]));
+                Mix_HaltMusic();
+                SCORE newScore=createScore(&(model.players[player1]));
                 insertScore(scores,newScore);
                 writeScoreFile(scores,&scoreFile);
                 updateScores(scores,&(scoresMenu),context);
                 freeGridArray(model.grid);
                 resetModel(&model);
                 activeView = main_menu;
+                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
             updateModel(&model,*(context->renderer));
             SDL_RenderPresent(*(context->renderer));
@@ -129,9 +130,11 @@ int runListeners(SDLcontext *context){
         case VS:
             model.nbPlayers=2;
             if(checkCollisions(&model) != -1){
+                Mix_HaltMusic();
                 freeGridArray(model.grid);
                 resetModel(&model);
                 activeView = main_menu;
+                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
             updateModel(&model,*(context->renderer));
             SDL_RenderPresent(*(context->renderer));
@@ -157,6 +160,7 @@ int runListeners(SDLcontext *context){
     //Détruire le renderer détruit également les textures associées.
     SDL_DestroyRenderer(*(context->renderer));
     SDL_DestroyWindow(*(context->window));
+    freeGameMusic(&gameMusic);
     IMG_Quit();
     SDL_Quit();
 

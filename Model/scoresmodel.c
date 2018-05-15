@@ -1,8 +1,10 @@
 #include "scoresmodel.h"
+#include "../Controller/soundcontroller.h"
 
-void updateScoresMenu(int *activeView,SDL_Keycode input){
+void updateScoresMenu(int *activeView,SDL_Keycode input,GAMEMUSIC *gameMusic){
     if(input == SDLK_a){
-        *activeView = main_menu;
+        Mix_PlayChannel(-1,gameMusic->menuDecide,0);
+        *activeView = main_menu;       
     }
 }
 int readScoreFile(SCORE scores[],FILE *scoreFile){

@@ -18,10 +18,11 @@ typedef enum{
 /// \param input
 /// \return
 ///
-void updateOptionsMenu(int *position,int *activeView,MODEL *model,SDL_Keycode input,int *speed,MENU_OPTIONS *menuOptions,SDL_Renderer *renderer);
+void updateOptionsMenu(int *position,int *activeView,MODEL *model,SDL_Keycode input,int *speed,MENU_OPTIONS *menuOptions,SDL_Renderer *renderer,GAMEMUSIC *gameMusic);
 void selectOptionsActions(int *position,int *activeView,int *speed,MENU_OPTIONS *menuOptions,MODEL *model,SDL_Renderer *renderer);
 void updateSpeed(int *speed,MENU_OPTIONS *menuOptions);
 void updateKeys(PLAYER *player,MENU_OPTIONS *menuOptions,int position,SDL_Renderer *renderer);
 void updateTextKeys(PLAYER *player,TEXT *text,int ctr);
+
 #endif // OPTIONSMODEL_H
 
