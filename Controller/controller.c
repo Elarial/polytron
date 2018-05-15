@@ -63,6 +63,7 @@ int runListeners(SDLcontext *context){
     readScoreFile(scores,&scoreFile);
     SCORES_DISPLAY scoresMenu = initScoresDisplay(context,scores);
     GAMEMUSIC gameMusic = initGameMusic();
+    CHAR_ANIMATION animation = initCharAnimation("sonic.png",*(context->renderer));
 
     Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
     while(end == 0){
@@ -85,6 +86,7 @@ int runListeners(SDLcontext *context){
                     break;
                 case solo:
                     updateDirection(&model,event.key.keysym.sym);
+
                     break;
                 case VS:
                     updateDirection(&model,event.key.keysym.sym);
@@ -123,7 +125,14 @@ int runListeners(SDLcontext *context){
                 activeView = main_menu;
                 Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
+
+            SDL_RenderClear(*context->renderer);
             updateModel(&model,*(context->renderer));
+
+            animation.activeFrame  += 1;
+            animation.activeFrame %= 3;
+
+            SDL_RenderCopy(*(context->renderer),animation.spritesTexture,&(animation.frames[model.players[player1].direction][animation.activeFrame]),&(model.players[player1].rect));
             SDL_RenderPresent(*(context->renderer));
             SDL_Delay(speed);
             break;

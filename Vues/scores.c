@@ -3,7 +3,7 @@
 SCORES_DISPLAY initScoresDisplay(SDLcontext *context,SCORE scores[10]){
     SCORES_DISPLAY scoresDisplay={0};
     int fontSize = 20;
-    scoresDisplay.backgroundTexture = loadTextureImg("sonic_1_1991.jpg",*(context->renderer));
+    scoresDisplay.backgroundTexture = loadTextureImg("menubackground.png",*(context->renderer));
     char *fontFile ="NiseSega.TTF";
     SDL_Color defaultColor = {255,255,255,SDL_ALPHA_OPAQUE};
     SDL_Color selectedColor = {128,82,82,SDL_ALPHA_OPAQUE};

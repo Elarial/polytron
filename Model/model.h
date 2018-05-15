@@ -24,12 +24,14 @@ typedef struct{
     int score; /**< Score du joueur */
     int posX; /**< Position du joueur sur l'axe des abscisses de la grille */
     int posY; /**< Position du joueur sur l'axe des ordonnées de la grille */
+    SDL_Rect rect; /**< Rectangle ou sera affiché le joueur */
     int direction; /**< Direction du curseur du joueur sur la grille */
     SDL_Keycode keyUp; /**< Touche réglé pour le joueur en tant que "HAUT" */
     SDL_Keycode keyDown;/**< Touche réglé pour le joueur en tant que "BAS" */
     SDL_Keycode keyLeft; /**< Touche réglé pour le joueur en tant que "GAUCHE" */
     SDL_Keycode keyRight; /**< Touche réglé pour le joueur en tant que "DROITE" */
     SDL_Color color; /**< Couleur de la trace laissée par le joueur */
+
 }PLAYER;
 /**
   *\brief Enum représenant les valeurs possibles dans la grille.

@@ -30,9 +30,9 @@ typedef enum{
   * \brief Enumération des vitesses de jeu possible (rafraichissement en ms)
   */
 typedef enum{
-    NORMAL = 10,
-    FAST = 5,
-    SUPA_FAST = 2
+    NORMAL = 50,
+    FAST = 10,
+    SUPA_FAST = 5
 }SPEED_VALUE;
 ///
 /// \brief initializeController : Initialise tous les modules nécéssaires au fonctionnement.

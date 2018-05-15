@@ -11,6 +11,14 @@ typedef struct{
     char *pathBackground; /**<Chemin de la texture affiché en fond de la zone de jeu*/
 
 }GAMEAREA;
+typedef struct{
+    char *spriteSheetName;
+    int activeFrame;
+    SDL_Texture *spritesTexture;
+    SDL_Rect frames[4][3];
+
+}CHAR_ANIMATION;
+CHAR_ANIMATION initCharAnimation(char *spriteSheetName,SDL_Renderer *renderer);
 ///
 /// \brief initGameArea Initialise la structure représentant le dessin de la zone de jeu
 /// \param context SDLcontexte du jeu

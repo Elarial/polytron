@@ -4,7 +4,7 @@
 MENU_OPTIONS initMenuOptions(SDLcontext *context){
     //Initialisation du menu options
     SDL_Texture *backgroundTexture = NULL;
-    backgroundTexture = loadTextureImg("sonic_1_1991.jpg",*(context->renderer));
+    backgroundTexture = loadTextureImg("menubackground.png",*(context->renderer));
     char *fontFile ="NiseSega.TTF";
     SDL_Color defaultColor = {255,255,255,SDL_ALPHA_OPAQUE};
     SDL_Color selectedColor = {128,82,82,SDL_ALPHA_OPAQUE};
@@ -19,11 +19,11 @@ MENU_OPTIONS initMenuOptions(SDLcontext *context){
     TEXT returnValue = initTexte("RETOUR AU MENU PRINCIPAL",fontFile,defaultColor,fontSize,*(context->renderer));
     TEXT keySelection = initTexte("SELECTIONNER LA TOUCHE HAUT DU JOUEUR 1",fontFile,defaultColor,fontSize,*(context->renderer));
     //Placement des textes
-    optionsTitle.textRect.y=10,optionsTitle.textRect.x = 0;
-    speedSelectTitle.textRect.y = 100,speedSelectTitle.textRect.x = 0;
-    speedSelectValue.textRect.y = 100, speedSelectValue.textRect.x = 300;
-    keySelectTitle.textRect.y =200, keySelectTitle.textRect.x = 0;
-    keySelectValue.textRect.y= 200, keySelectValue.textRect.x = 300;
+    optionsTitle.textRect.y=10,optionsTitle.textRect.x = context->width/2 - optionsTitle.textRect.w/2;
+    speedSelectTitle.textRect.y = 100,speedSelectTitle.textRect.x = context->width/4 - speedSelectTitle.textRect.w/2 ;
+    speedSelectValue.textRect.y = 100, speedSelectValue.textRect.x = context->width*3/4 - speedSelectTitle.textRect.w/2;
+    keySelectTitle.textRect.y =200, keySelectTitle.textRect.x = context->width/4 - keySelectTitle.textRect.w/2 ;
+    keySelectValue.textRect.y= 200, keySelectValue.textRect.x = context->width*3/4 - keySelectValue.textRect.w/2;
     returnValue.textRect.y=400,returnValue.textRect.x=context->width/2 - returnValue.textRect.w/2;
     keySelection.textRect.y=300,keySelection.textRect.x=context->width/2 - keySelection.textRect.w/2;
     MENU_OPTIONS menuOptions = {backgroundTexture,fontFile,defaultColor,selectedColor,optionsTitle,speedSelectTitle,speedSelectValue,keySelectTitle,keySelectValue,returnValue,keySelection};
