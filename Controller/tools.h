@@ -9,18 +9,17 @@ typedef struct{
     SDL_Rect textRect; /**< Rectangle dans lequel sera affiché le rectangle */
     SDL_Texture *textTexture; /**< La texture qui sera affiché sur le rendu */
     SDL_Color textColor; /**< La couleur de la texture affiché */
-    int fontSize; /**< La taille de la font qui sera affiché*/
     //TODO : remplacer fontSize par le type TTF_Font
 }TEXT;
 ///
-/// \brief initTexte : Initialise la structure TEXTE : Affiche un texte aux coordonnées 0;0 par défaut.
-/// \param text : Le message qui sera affiché.
-/// \param fontFile : Chemin du fichier contenant la font.
-/// \param textColor : Couleur du texte.
-/// \param fontSize : Taille de la font.
-/// \return La structure TEXT initialisé.
+/// \brief initTexte
+/// \param message
+/// \param font
+/// \param textColor
+/// \param renderer
+/// \return
 ///
-TEXT initTexte(char* message,char* fontFile,SDL_Color textColor,int fontSize,SDL_Renderer *renderer);
+TEXT initTexte(char* message,TTF_Font *font,SDL_Color textColor,SDL_Renderer *renderer);
 ///
 /// \brief loadTextureImg : Génère une texture à partir d'une image.
 /// \param pathFile : Chemin du fichier en relatif ou absolu.
@@ -29,15 +28,21 @@ TEXT initTexte(char* message,char* fontFile,SDL_Color textColor,int fontSize,SDL
 ///
 SDL_Texture* loadTextureImg(char* pathFile, SDL_Renderer* renderer);
 ///
-/// \brief renderText : Génère une texture à partir d'un texte
-/// \param message : Texte que sera affiché.
-/// \param fontFile : Chemin du fichier contenant la font.
-/// \param color : Couleur du texte qui sera affiché.
-/// \param fontSize : Taille du texte qui sera affiché.
-/// \param renderer : Rendu dans lequel sera affiché la texture.
-/// \return La texture généré
+/// \brief getFontFromFile
+/// \param fontFile
+/// \param fontSize
+/// \return
 ///
-SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer);
+TTF_Font* getFontFromFile(char* fontFile,int fontSize);
+///
+/// \brief renderText
+/// \param message
+/// \param color
+/// \param renderer
+/// \param font
+/// \return
+///
+SDL_Texture* renderText(char* message,SDL_Color color,SDL_Renderer *renderer,TTF_Font *font);
 ///
 /// \brief renderTexts : Génère un tableau de texture à partir d'un tableau de texte.
 /// \param textures : Le tableau de textures cible qui sera rempli.

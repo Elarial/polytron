@@ -6,21 +6,25 @@ void logSDLError(char* message){
     fprintf(stderr,"Erreur : %s\nErreur SDL : %s\n",message,SDL_GetError());
 }
 
-TEXT initTexte(char* message,char* fontFile,SDL_Color textColor,int fontSize,SDL_Renderer *renderer){
+TEXT initTexte(char* message,TTF_Font *font,SDL_Color textColor,SDL_Renderer *renderer){
     SDL_Texture *texture = NULL;
-    texture = renderText(message,fontFile,textColor,fontSize,renderer);
+    texture = renderText(message,textColor,renderer,font);
     SDL_Rect textRect = createRectFromTexture(texture);
-    TEXT text = {message,textRect,texture,textColor,fontSize};
+    TEXT text = {message,textRect,texture,textColor};
     return text;
 }
 
-SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSize,SDL_Renderer *renderer){
-    //On ouvre le fichier font
+TTF_Font* getFontFromFile(char* fontFile,int fontSize){
     TTF_Font *font = TTF_OpenFont(fontFile,fontSize);
     if(font==NULL){
         logSDLError("Erreur lors de la création de la font");
         return NULL;
+    }else{
+        return font;
     }
+}
+
+SDL_Texture* renderText(char* message,SDL_Color color,SDL_Renderer *renderer,TTF_Font *font){
     SDL_Surface *surface = TTF_RenderText_Blended(font,message,color);
     if(surface == NULL){
         TTF_CloseFont(font);
@@ -32,7 +36,6 @@ SDL_Texture* renderText(char* message,char* fontFile,SDL_Color color,int fontSiz
         logSDLError("Erreur lors de la création de la texture à partir de la suface font");
     }
     SDL_FreeSurface(surface);
-    TTF_CloseFont(font);
     return texture;
 
 }

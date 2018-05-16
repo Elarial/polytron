@@ -9,15 +9,15 @@ MENU_OPTIONS initMenuOptions(SDLcontext *context){
     SDL_Color defaultColor = {255,255,255,SDL_ALPHA_OPAQUE};
     SDL_Color selectedColor = {128,82,82,SDL_ALPHA_OPAQUE};
     int fontSize = 20;
-
+    TTF_Font *font = getFontFromFile(fontFile,fontSize);
     //Initialisation des textes
-    TEXT optionsTitle = initTexte("OPTIONS",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT speedSelectTitle = initTexte("VITESSE DU JEU",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT speedSelectValue = initTexte("NORMAL",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT keySelectTitle = initTexte("REGLAGE DES TOUCHES",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT keySelectValue = initTexte("COMMENCER LE REGLAGE",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT returnValue = initTexte("RETOUR AU MENU PRINCIPAL",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT keySelection = initTexte("SELECTIONNER LA TOUCHE HAUT DU JOUEUR 1",fontFile,defaultColor,fontSize,*(context->renderer));
+    TEXT optionsTitle = initTexte("OPTIONS",font,defaultColor,*(context->renderer));
+    TEXT speedSelectTitle = initTexte("VITESSE DU JEU",font,defaultColor,*(context->renderer));
+    TEXT speedSelectValue = initTexte("NORMAL",font,defaultColor,*(context->renderer));
+    TEXT keySelectTitle = initTexte("REGLAGE DES TOUCHES",font,defaultColor,*(context->renderer));
+    TEXT keySelectValue = initTexte("COMMENCER LE REGLAGE",font,defaultColor,*(context->renderer));
+    TEXT returnValue = initTexte("RETOUR AU MENU PRINCIPAL",font,defaultColor,*(context->renderer));
+    TEXT keySelection = initTexte("SELECTIONNER LA TOUCHE HAUT DU JOUEUR 1",font,defaultColor,*(context->renderer));
     //Placement des textes
     optionsTitle.textRect.y=10,optionsTitle.textRect.x = context->width/2 - optionsTitle.textRect.w/2;
     speedSelectTitle.textRect.y = 100,speedSelectTitle.textRect.x = context->width/4 - speedSelectTitle.textRect.w/2 ;
@@ -26,12 +26,12 @@ MENU_OPTIONS initMenuOptions(SDLcontext *context){
     keySelectValue.textRect.y= 200, keySelectValue.textRect.x = context->width*3/4 - keySelectValue.textRect.w/2;
     returnValue.textRect.y=400,returnValue.textRect.x=context->width/2 - returnValue.textRect.w/2;
     keySelection.textRect.y=300,keySelection.textRect.x=context->width/2 - keySelection.textRect.w/2;
-    MENU_OPTIONS menuOptions = {backgroundTexture,fontFile,defaultColor,selectedColor,optionsTitle,speedSelectTitle,speedSelectValue,keySelectTitle,keySelectValue,returnValue,keySelection};
+    MENU_OPTIONS menuOptions = {backgroundTexture,fontFile,font,defaultColor,selectedColor,optionsTitle,speedSelectTitle,speedSelectValue,keySelectTitle,keySelectValue,returnValue,keySelection};
     return menuOptions;
 
 }
 int renderkeySelection(MENU_OPTIONS *menuOptions,SDL_Renderer *renderer){
-    menuOptions->keySelection.textTexture=renderText(menuOptions->keySelection.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->keySelection.fontSize,renderer);
+    menuOptions->keySelection.textTexture=renderText(menuOptions->keySelection.text,menuOptions->defaultColor,renderer,menuOptions->font);
     if(SDL_RenderCopy(renderer,menuOptions->keySelection.textTexture,NULL,&(menuOptions->keySelection.textRect))!=EXIT_SUCCESS){
         return(EXIT_FAILURE);
     }
@@ -46,19 +46,19 @@ int renderOptionsMenu(MENU_OPTIONS *menuOptions,int ctr,SDL_Renderer *renderer){
         //Changement de la couleur du texte en fontion de l'input
         switch (ctr) {
         case menuOptionsSpeed:
-            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->fontFile,menuOptions->selectedColor,menuOptions->speedSelectValue.fontSize,renderer);
-            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->keySelectValue.fontSize,renderer);
-            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->returnValue.fontSize,renderer);
+            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->selectedColor,renderer,menuOptions->font);
+            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
+            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
             break;
         case menuOptionsKey:
-            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->fontFile,menuOptions->selectedColor,menuOptions->keySelectValue.fontSize,renderer);
-            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->speedSelectValue.fontSize,renderer);
-            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->returnValue.fontSize,renderer);
+            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->selectedColor,renderer,menuOptions->font);
+            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
+            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
             break;
         case menuOptionsReturn:
-            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->fontFile,menuOptions->selectedColor,menuOptions->returnValue.fontSize,renderer);
-            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->speedSelectValue.fontSize,renderer);
-            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->fontFile,menuOptions->defaultColor,menuOptions->keySelectValue.fontSize,renderer);
+            menuOptions->returnValue.textTexture=renderText(menuOptions->returnValue.text,menuOptions->selectedColor,renderer,menuOptions->font);
+            menuOptions->speedSelectValue.textTexture=renderText(menuOptions->speedSelectValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
+            menuOptions->keySelectValue.textTexture=renderText(menuOptions->keySelectValue.text,menuOptions->defaultColor,renderer,menuOptions->font);
         default:
             break;
         }

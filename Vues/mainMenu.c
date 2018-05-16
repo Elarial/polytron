@@ -18,16 +18,17 @@ MAINMENU initMainMenu(SDLcontext *context){
     char* playerVsAiText = "VERSUS IA";
     char* optionsText = "OPTIONS";
     char* scoresText = "SCORES";
+    TTF_Font *font = getFontFromFile(pathTTF,fontSize);
     backgroundTexture = loadTextureImg(pathBackground,*(context->renderer));
-    player1Texture = renderText(player1Text,pathTTF,defaultColor,fontSize,*(context->renderer));
+    player1Texture = renderText(player1Text,defaultColor,*(context->renderer),font);
     SDL_Rect player1Rect = createRectFromTexture(player1Texture);
-    player2Texture = renderText(player2Text,pathTTF,defaultColor,fontSize,*(context->renderer));
+    player2Texture = renderText(player2Text,defaultColor,*(context->renderer),font);
     SDL_Rect player2Rect = createRectFromTexture(player2Texture);
-    playerVsAiTexture = renderText(playerVsAiText,pathTTF,defaultColor,fontSize,*(context->renderer));
+    playerVsAiTexture = renderText(playerVsAiText,defaultColor,*(context->renderer),font);
     SDL_Rect playerVsAiRect = createRectFromTexture(playerVsAiTexture);
-    optionsTexture = renderText(optionsText,pathTTF,defaultColor,fontSize,*(context->renderer));
+    optionsTexture = renderText(optionsText,defaultColor,*(context->renderer),font);
     SDL_Rect optionsRect = createRectFromTexture(optionsTexture);
-    scoresTexture = renderText(scoresText,pathTTF,defaultColor,fontSize,*(context->renderer));
+    scoresTexture = renderText(scoresText,defaultColor,*(context->renderer),font);
     SDL_Rect scoresRect = createRectFromTexture(scoresTexture) ;
     //Todo: outline
     int xCenter,yCenter,offsetInit,offset;
@@ -63,6 +64,7 @@ MAINMENU initMainMenu(SDLcontext *context){
         pathBackground,
         pathTTF,
         fontSize,
+        font
 
     };
     return mainMenu;
@@ -76,29 +78,29 @@ int renderMainMenu(MAINMENU *mainMenu,int ctr,SDL_Renderer *renderer){
         //Changement de la couleur du texte en fontion de l'input
         switch (ctr) {
         case mainMenuSolo:
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->selectedColor,renderer,mainMenu->font);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->defaultColor,renderer,mainMenu->font);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->defaultColor,renderer,mainMenu->font);
             break;
         case mainMenuPvp:
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->selectedColor,renderer,mainMenu->font);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->defaultColor,renderer,mainMenu->font);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->defaultColor,renderer,mainMenu->font);
             break;
         case mainMenuPvAi:
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
-            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->selectedColor,renderer,mainMenu->font);
+            mainMenu->player2Texture=renderText(mainMenu->player2Text,mainMenu->defaultColor,renderer,mainMenu->font);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->defaultColor,renderer,mainMenu->font);
             break;
         case mainMenuOptions:
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
-            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->selectedColor,renderer,mainMenu->font);
+            mainMenu->playerVsAiTexture=renderText(mainMenu->playerVsAiText,mainMenu->defaultColor,renderer,mainMenu->font);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->defaultColor,renderer,mainMenu->font);
             break;
         case mainMenuScores:
-            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->pathTTF,mainMenu->selectedColor,mainMenu->fontSize,renderer);
-            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
-            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->pathTTF,mainMenu->defaultColor,mainMenu->fontSize,renderer);
+            mainMenu->scoresTexture=renderText(mainMenu->scoresText,mainMenu->selectedColor,renderer,mainMenu->font);
+            mainMenu->optionsTexture=renderText(mainMenu->optionsText,mainMenu->defaultColor,renderer,mainMenu->font);
+            mainMenu->player1Texture=renderText(mainMenu->player1Text,mainMenu->defaultColor,renderer,mainMenu->font);
         default:
             break;
         }

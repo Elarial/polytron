@@ -188,6 +188,8 @@ int runListeners(SDLcontext *context){
     SDL_DestroyRenderer(*(context->renderer));
     SDL_DestroyWindow(*(context->window));
     freeGameMusic(&gameMusic);
+    TTF_CloseFont(mainMenu.font);
+    TTF_CloseFont(optionsMenu.font);
     IMG_Quit();
     SDL_Quit();
 

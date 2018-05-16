@@ -8,6 +8,7 @@
 typedef struct{
     SDL_Texture *backgroundTexture; /**< Texture de fond du menu. */
     char *fontFile; /**< Fichier font utilisé pour le menu options. */
+    TTF_Font *font; /**< Font utilisé pour le rendu du menu.*/
     SDL_Color defaultColor; /**< Couleur par défaut. */
     SDL_Color selectedColor; /**< Couleur lorsque le curseur est positionné sur le texte. */
     TEXT optionsTitle; /**< Le descriptif du titre du menu. */

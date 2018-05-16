@@ -27,6 +27,7 @@ typedef struct {
     char* pathBackground; /**<Chemin de la texture de fond. */
     char* pathTTF; /**<Chemin du fichier TTF pour le rendu des textes. */
     int fontSize; /**<Taille des textes. */
+    TTF_Font *font; /**<Font des textes qui seront affichés. */
 
 }MAINMENU;
 /**

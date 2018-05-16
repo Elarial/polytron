@@ -7,24 +7,26 @@ SCORES_DISPLAY initScoresDisplay(SDLcontext *context,SCORE scores[10]){
     char *fontFile ="NiseSega.TTF";
     SDL_Color defaultColor = {255,255,255,SDL_ALPHA_OPAQUE};
     SDL_Color selectedColor = {128,82,82,SDL_ALPHA_OPAQUE};
+    TTF_Font *font = getFontFromFile(fontFile,fontSize);
 
     //Création et placement des textes statiques
-    scoresDisplay.returnValue = initTexte("RETOUR AU MENU PRINCIPAL",fontFile,selectedColor,fontSize,*(context->renderer));
+    scoresDisplay.returnValue = initTexte("RETOUR AU MENU PRINCIPAL",font,selectedColor,*(context->renderer));
     scoresDisplay.returnValue.textRect.y = context->height - 50;
     scoresDisplay.returnValue.textRect.x = context->width/2 - scoresDisplay.returnValue.textRect.w/2;
-    scoresDisplay.highScores = initTexte("MEILLEURS SCORES",fontFile,defaultColor,fontSize,*(context->renderer));
+    scoresDisplay.highScores = initTexte("MEILLEURS SCORES",font,defaultColor,*(context->renderer));
     scoresDisplay.highScores.textRect.y = 10;
     scoresDisplay.highScores.textRect.x = context->width/2 - scoresDisplay.highScores.textRect.w/2;
-    scoresDisplay.position = initTexte("POSITION",fontFile,defaultColor,fontSize,*(context->renderer));
+    scoresDisplay.position = initTexte("POSITION",font,defaultColor,*(context->renderer));
     scoresDisplay.position.textRect.y = 50;
     scoresDisplay.position.textRect.x = 0;
-    scoresDisplay.name = initTexte("NOM",fontFile,defaultColor,fontSize,*(context->renderer));
+    scoresDisplay.name = initTexte("NOM",font,defaultColor,*(context->renderer));
     scoresDisplay.name.textRect.y = 50;
     scoresDisplay.name.textRect.x = context->width/2 - scoresDisplay.name.textRect.w/2;
-    scoresDisplay.score = initTexte("score",fontFile,defaultColor,fontSize,*(context->renderer));
+    scoresDisplay.score = initTexte("score",font,defaultColor,*(context->renderer));
     scoresDisplay.score.textRect.y = 50;
     scoresDisplay.score.textRect.x = context->width - scoresDisplay.score.textRect.w;
     updateScores(scores,&(scoresDisplay),context);
+    TTF_CloseFont(font);
     return scoresDisplay;
 }
 int renderScoresDisplay(SCORES_DISPLAY scoresDisplay,SDL_Renderer *renderer){
