@@ -12,7 +12,7 @@ MENU_OPTIONS initMenuOptions(SDLcontext *context){
 
     //Initialisation des textes
     TEXT optionsTitle = initTexte("OPTIONS",fontFile,defaultColor,fontSize,*(context->renderer));
-    TEXT speedSelectTitle = initTexte("VITESSE",fontFile,defaultColor,fontSize,*(context->renderer));
+    TEXT speedSelectTitle = initTexte("VITESSE DU JEU",fontFile,defaultColor,fontSize,*(context->renderer));
     TEXT speedSelectValue = initTexte("NORMAL",fontFile,defaultColor,fontSize,*(context->renderer));
     TEXT keySelectTitle = initTexte("REGLAGE DES TOUCHES",fontFile,defaultColor,fontSize,*(context->renderer));
     TEXT keySelectValue = initTexte("COMMENCER LE REGLAGE",fontFile,defaultColor,fontSize,*(context->renderer));

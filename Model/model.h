@@ -1,7 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 #include <SDL2/SDL.h>
-
 #define p1DefaultposX  (10)
 #define p1DefaultposY (10)
 #define p2DefaultposX (500)

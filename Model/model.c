@@ -1,7 +1,7 @@
 #include "model.h"
-#include <stdio.h>
-#include "../Controller/tools.h"
 #include "../Vues/gameArea.h"
+#include <stdio.h>
+
 void displayGrid(GRID *grid){
     //Affichage de la grille
     for (int i = 0; i < grid->height; ++i) {
@@ -31,18 +31,80 @@ int updateModel(MODEL *model, SDL_Renderer *renderer){
 
     for (int p = 0; p < model->nbPlayers; ++p) {
         if(model->players[p].id == player1){
-            for (int i = 0; i < model->players[p].rect.h; ++i) {
-                model->grid.gridArray[model->players[p].rect.x][model->players[p].rect.y+i] = p1Blocked;
+
+            switch (model->players[p].direction) {
+            case up:
+                for (int i = 0; i < model->players[p].rect.w; ++i) {
+                    for (int j = 0; j < model->players[p].rect.h; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y + model->players[p].rect.h-j] = p1Blocked;
+                    }
+                }
+                break;
+            case down:
+                for (int i = 0; i < model->players[p].rect.w; ++i) {
+                    for (int j = 0; j < model->players[p].rect.h; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y+j] = p1Blocked;
+                    }
+                }
+                break;
+            case left:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    for (int j = 0; j < model->players[p].rect.w; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+model->players[p].rect.w-j][model->players[p].rect.y+i] = p1Blocked;
+                    }
+
+                }
+                break;
+            case right:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    for (int j = 0; j < model->players[p].rect.w; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+j][model->players[p].rect.y+i] = p1Blocked;
+                    }
+                }
+                break;
+            default:
+                break;
             }
-            //model->grid.gridArray[model->players[p].posX][model->players[p].posY] = p1Blocked;
         }else if(model->players[p].id == player2){
-            model->grid.gridArray[model->players[p].posX][model->players[p].posY] = p2Blocked;
+            switch (model->players[p].direction) {
+            case up:
+                for (int i = 0; i < model->players[p].rect.w; ++i) {
+                    for (int j = 0; j < model->players[p].rect.h; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y + model->players[p].rect.h-j] = p2Blocked;
+                    }
+                }
+                break;
+            case down:
+                for (int i = 0; i < model->players[p].rect.w; ++i) {
+                    for (int j = 0; j < model->players[p].rect.h; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y+j] = p2Blocked;
+                    }
+                }
+                break;
+            case left:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    for (int j = 0; j < model->players[p].rect.w; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+model->players[p].rect.w-j][model->players[p].rect.y+i] = p2Blocked;
+                    }
+                }
+                break;
+            case right:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    for (int j = 0; j < model->players[p].rect.w; ++j) {
+                        model->grid.gridArray[model->players[p].rect.x+j][model->players[p].rect.y+i] = p2Blocked;
+                    }
+                }
+                break;
+            default:
+                break;
+            }
         }else{
             logSDLError("Impossible d'attribuer une valeur à la grille");
             return(EXIT_FAILURE);
         }
-        completeUpdateGridView(model,renderer);
-        //partialUpdateGridView(model,renderer);
+        //completeUpdateGridView(model,renderer);
+
+        partialUpdateGridView(model,renderer);
         switch (model->players[p].direction) {
         case up:
             model->players[p].posY--;
@@ -73,12 +135,82 @@ int updateModel(MODEL *model, SDL_Renderer *renderer){
 //TODO : check draw gamu.
 int checkCollisions(MODEL *model){
     for (int p = 0; p < model->nbPlayers; ++p) {
+        if(model->players[p].id==player1){
+            switch (model->players[p].direction) {
+            case up:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y-1] != isEmpty){
+                        return player2;
+                    }
+                }
+                break;
+            case down:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y+model->players[p].rect.h] != isEmpty){
+                        return player2;
+                    }
+                }
+                break;
+            case left:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x-1][model->players[p].rect.y+i] != isEmpty){
+                        return player2;
+                    }
+                }
+                break;
+            case right:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x + model->players[p].rect.w][model->players[p].rect.y+i] != isEmpty){
+                        return player2;
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        if(model->players[p].id==player2){
+            switch (model->players[p].direction) {
+            case up:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y-1] != isEmpty){
+                        return player1;
+                    }
+                }
+                break;
+            case down:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x+i][model->players[p].rect.y+model->players[p].rect.h] != isEmpty){
+                        return player1;
+                    }
+                }
+                break;
+            case left:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x-1][model->players[p].rect.y+i] != isEmpty){
+                        return player1;
+                    }
+                }
+                break;
+            case right:
+                for (int i = 0; i < model->players[p].rect.h; ++i) {
+                    if(model->grid.gridArray[model->players[p].rect.x + model->players[p].rect.w][model->players[p].rect.y+i] != isEmpty){
+                        return player1;
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        /*
         if(model->players[p].id == player1 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] != isEmpty){
             return player2;
         }
         else if(model->players[p].id == player2 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] != isEmpty){
             return player1;
         }
+        */
     }
     return -1;
 }

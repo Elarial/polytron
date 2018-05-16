@@ -54,6 +54,7 @@ int runListeners(SDLcontext *context){
     int ctrOptionsMenu = 0;
     int activeView = main_menu;
     int speed = NORMAL;
+    int oneTimeAccess = 0;
     SDL_Event event = {0};
     MAINMENU mainMenu = initMainMenu(context);
     MENU_OPTIONS optionsMenu = initMenuOptions(context);
@@ -63,9 +64,9 @@ int runListeners(SDLcontext *context){
     readScoreFile(scores,&scoreFile);
     SCORES_DISPLAY scoresMenu = initScoresDisplay(context,scores);
     GAMEMUSIC gameMusic = initGameMusic();
-    CHAR_ANIMATION animation = initCharAnimation("sonic.png",*(context->renderer));
+    GAMEAREA gameArea = initGameArea(context);
 
-    Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+    //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -108,44 +109,61 @@ int runListeners(SDLcontext *context){
         //Boucle d'itération du jeu
 
         switch (activeView) {
-          case main_menu:
+        case main_menu:
             renderMainMenu(&mainMenu,ctrMainMenu,*(context->renderer));
             SDL_Delay(10);
             break;
         case solo:
-            model.nbPlayers=1;
+            while(oneTimeAccess != 1){
+                model.nbPlayers=1;
+                renderGameArea(&gameArea,*(context->renderer));
+                oneTimeAccess = 1;
+            }
+
+
             if(checkCollisions(&model) != -1){
-                Mix_HaltMusic();
+
+                SDL_RenderClear(*context->renderer);
+                //Mix_HaltMusic();
                 SCORE newScore=createScore(&(model.players[player1]));
                 insertScore(scores,newScore);
                 writeScoreFile(scores,&scoreFile);
                 updateScores(scores,&(scoresMenu),context);
                 freeGridArray(model.grid);
                 resetModel(&model);
+                oneTimeAccess = 0;
                 activeView = main_menu;
-                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+                //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
 
-            SDL_RenderClear(*context->renderer);
+
             updateModel(&model,*(context->renderer));
+            nextAnimationStep(&gameArea,&model,*context->renderer);
 
-            animation.activeFrame  += 1;
-            animation.activeFrame %= 3;
-
-            SDL_RenderCopy(*(context->renderer),animation.spritesTexture,&(animation.frames[model.players[player1].direction][animation.activeFrame]),&(model.players[player1].rect));
             SDL_RenderPresent(*(context->renderer));
             SDL_Delay(speed);
             break;
         case VS:
-            model.nbPlayers=2;
+            while(oneTimeAccess != 1){
+                 model.nbPlayers=2;
+                renderGameArea(&gameArea,*(context->renderer));
+                oneTimeAccess = 1;
+            }
+
+
             if(checkCollisions(&model) != -1){
-                Mix_HaltMusic();
+                //Mix_HaltMusic();
+                SDL_RenderClear(*context->renderer);
                 freeGridArray(model.grid);
                 resetModel(&model);
+                oneTimeAccess = 0;
                 activeView = main_menu;
-                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+                //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
+
             updateModel(&model,*(context->renderer));
+            nextAnimationStep(&gameArea,&model,*context->renderer);
+
             SDL_RenderPresent(*(context->renderer));
             SDL_Delay(speed);
             break;

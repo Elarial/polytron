@@ -5,20 +5,20 @@
 /**
   * \brief Le type utilisé pour représenter l'affichage de la zone de jeu
   */
-
-typedef struct{
-    SDL_Texture *backgroundTexture; /**<Texture affiché en fond de la zone de jeu*/
-    char *pathBackground; /**<Chemin de la texture affiché en fond de la zone de jeu*/
-
-}GAMEAREA;
 typedef struct{
     char *spriteSheetName;
     int activeFrame;
     SDL_Texture *spritesTexture;
     SDL_Rect frames[4][3];
 
-}CHAR_ANIMATION;
-CHAR_ANIMATION initCharAnimation(char *spriteSheetName,SDL_Renderer *renderer);
+}ANIMATION;
+typedef struct{
+    SDL_Texture *backgroundTexture; /**<Texture affiché en fond de la zone de jeu*/
+    ANIMATION animations[2]; /**<Animations des personnages */
+}GAMEAREA;
+void nextAnimationStep(GAMEAREA *gameArea,MODEL *model,SDL_Renderer *renderer);
+void renderGameArea(GAMEAREA *gameArea,SDL_Renderer *renderer);
+ANIMATION initCharAnimation(char *spriteSheetName,SDL_Renderer *renderer,int height,int widths,int widthl);
 ///
 /// \brief initGameArea Initialise la structure représentant le dessin de la zone de jeu
 /// \param context SDLcontexte du jeu
