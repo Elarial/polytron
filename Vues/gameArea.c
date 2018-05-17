@@ -4,6 +4,9 @@
 
 GAMEAREA initGameArea (SDLcontext *context){
     GAMEAREA gameArea;
+    gameArea.fontColor.r=255,gameArea.fontColor.g=0,gameArea.fontColor.b=0,gameArea.fontColor.a=SDL_ALPHA_OPAQUE;
+    gameArea.font = getFontFromFile("NiseSegaSonic.TTF",40);
+    gameArea.loadingTexture = loadTextureImg("vsloadin.png",*(context->renderer));
     gameArea.backgroundTexture = loadTextureImg("gamebackground.jpg",*(context->renderer));
     gameArea.animations[player1] = initCharAnimation("sonic.png",*(context->renderer),26,16,20);
     gameArea.animations[player2] = initCharAnimation("tails.png",*(context->renderer),22,22,22);
@@ -73,16 +76,51 @@ ANIMATION initCharAnimation(char *spriteSheetName,SDL_Renderer *renderer,int hei
     animation.frames[right][2].y=animation.frames[up][2].h;
     return animation;
 }
-void renderGameArea(GAMEAREA *gameArea,SDL_Renderer *renderer){
-    SDL_RenderCopy(renderer,gameArea->backgroundTexture,NULL,NULL);
+void renderGameArea(GAMEAREA *gameArea,SDLcontext *context,MODEL *model){
+    SDL_Texture *countDownText;
+    SDL_Rect playerloadingRect[2];
+    SDL_Texture *playerNameTexture[2];
+    for (int i = 0; i < model->nbPlayers; ++i) {
+        playerNameTexture[i] = renderText(model->players[i].name,gameArea->fontColor,*(context->renderer),gameArea->font);
+        playerloadingRect[i] = createRectFromTexture(playerNameTexture[i]);
+        playerloadingRect[i].x = i*350 + 50;
+        playerloadingRect[i].y = i*350 + 50;
+    }
+    for (int i = 0; i < 2; ++i) {
+        SDL_RenderClear(*(context->renderer));
+        countDownText = (i == 0) ? renderText("%EADY ?",gameArea->fontColor,*(context->renderer),gameArea->font) : renderText("GO @",gameArea->fontColor,*(context->renderer),gameArea->font);
+        gameArea->fontRect = createRectFromTexture(countDownText);
+        gameArea->fontRect.x=context->width/2-gameArea->fontRect.w/2;
+        gameArea->fontRect.y=context->height/2-gameArea->fontRect.h/2;
+        SDL_RenderCopy(*(context->renderer),gameArea->loadingTexture,NULL,NULL);
+        SDL_RenderCopy(*(context->renderer),countDownText,NULL,&(gameArea->fontRect));
+         for (int p = 0; p < model->nbPlayers; ++p){
+             SDL_RenderCopy(*(context->renderer),playerNameTexture[p],NULL,&(playerloadingRect[p]));
+         }
+        SDL_RenderPresent(*(context->renderer));
+        SDL_Delay(2000);
+    }
+
+    SDL_RenderClear(*(context->renderer));
+
+    SDL_RenderCopy(*(context->renderer),gameArea->backgroundTexture,NULL,NULL);
+    SDL_SetRenderDrawColor(*(context->renderer),255,0,0,SDL_ALPHA_OPAQUE);
+    for (int i = 0; i < 640; ++i) {
+        for (int j = 0; j < 480; ++j) {
+            if(model->grid.gridArray[i][j]==computerBlocked){
+                SDL_RenderDrawPoint(*(context->renderer),i,j);
+            }
+        }
+    }
+    SDL_SetRenderDrawColor(*(context->renderer),0,0,0,SDL_ALPHA_OPAQUE);
 }
 
 void nextAnimationStep(GAMEAREA *gameArea,MODEL *model,SDL_Renderer *renderer){
 
     for (int i = 0; i < model->nbPlayers; ++i) {
         gameArea->animations[i].activeFrame  += 1;
-        gameArea->animations[i].activeFrame %= 3;
-        SDL_RenderCopy(renderer,gameArea->animations[i].spritesTexture,&(gameArea->animations[i].frames[model->players[i].direction][gameArea->animations[i].activeFrame]),&(model->players[i].rect));
+        gameArea->animations[i].activeFrame %= 9;
+        SDL_RenderCopy(renderer,gameArea->animations[i].spritesTexture,&(gameArea->animations[i].frames[model->players[i].direction][gameArea->animations[i].activeFrame/3]),&(model->players[i].rect));
     }
 }
 int completeUpdateGridView(MODEL *model,SDL_Renderer *renderer){
@@ -118,17 +156,6 @@ int partialUpdateGridView(MODEL *model,SDL_Renderer *renderer){
         if(setRenderDrawColorFromPlayer(&(model->players[p]),renderer)!=EXIT_SUCCESS){
             return(EXIT_FAILURE);
         }
-        /*
-        if((model->players[p].id == player1 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] == p1Blocked)
-                ||(model->players[p].id == player2 && model->grid.gridArray[model->players[p].posX][model->players[p].posY] == p2Blocked)){
-            //renderdrawline ici.
-            if(SDL_RenderDrawPoint(renderer,model->players[p].posX,model->players[p].posY)!=EXIT_SUCCESS){
-                logSDLError("Erreur lors du dessin des points");
-                return(EXIT_FAILURE);
-            }
-        }
-            */
-        //SDL_RenderDrawRect(renderer,&(model->players[p].rect));
         SDL_RenderFillRect(renderer,&(model->players[p].rect));
     }
 

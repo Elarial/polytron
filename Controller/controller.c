@@ -51,14 +51,14 @@ int initializeSDLttf(){
 int runListeners(SDLcontext *context){
     int end = 0;
     int ctrMainMenu = mainMenuSolo;
-    int ctrOptionsMenu = 0;
+    int ctrOptionsMenu = menuOptionsSpeed;
     int activeView = main_menu;
     int speed = NORMAL;
     int oneTimeAccess = 0;
     SDL_Event event = {0};
-    MAINMENU mainMenu = initMainMenu(context);
-    MENU_OPTIONS optionsMenu = initMenuOptions(context);
     MODEL model = initModel();
+    MENU_OPTIONS optionsMenu = initMenuOptions(context,&(model));
+    MAINMENU mainMenu = initMainMenu(context);
     SCORE scores[10]={0};
     FILE scoreFile;
     readScoreFile(scores,&scoreFile);
@@ -66,7 +66,7 @@ int runListeners(SDLcontext *context){
     GAMEMUSIC gameMusic = initGameMusic();
     GAMEAREA gameArea = initGameArea(context);
 
-    //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+    Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
     while(end == 0){
         while (SDL_PollEvent(&event)){
             //If user closes the window
@@ -87,14 +87,13 @@ int runListeners(SDLcontext *context){
                     break;
                 case solo:
                     updateDirection(&model,event.key.keysym.sym);
-
                     break;
                 case VS:
                     updateDirection(&model,event.key.keysym.sym);
                     break;
                 case options:
-                    updateOptionsMenu(&ctrOptionsMenu,&activeView,&model,event.key.keysym.sym,&speed,&optionsMenu,*(context->renderer),&gameMusic);
-                    renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
+                    updateOptionsMenu(&activeView,&model,event.key.keysym.sym,&speed,&optionsMenu,*(context->renderer),&gameMusic);
+                    renderOptionsMenu(&optionsMenu,*(context->renderer));
                     SDL_RenderPresent(*(context->renderer));
                     SDL_RenderClear(*(context->renderer));
                     break;
@@ -116,7 +115,7 @@ int runListeners(SDLcontext *context){
         case solo:
             while(oneTimeAccess != 1){
                 model.nbPlayers=1;
-                renderGameArea(&gameArea,*(context->renderer));
+                renderGameArea(&gameArea,context,&(model));
                 oneTimeAccess = 1;
             }
 
@@ -124,7 +123,7 @@ int runListeners(SDLcontext *context){
             if(checkCollisions(&model) != -1){
 
                 SDL_RenderClear(*context->renderer);
-                //Mix_HaltMusic();
+                Mix_HaltMusic();
                 SCORE newScore=createScore(&(model.players[player1]));
                 insertScore(scores,newScore);
                 writeScoreFile(scores,&scoreFile);
@@ -133,7 +132,7 @@ int runListeners(SDLcontext *context){
                 resetModel(&model);
                 oneTimeAccess = 0;
                 activeView = main_menu;
-                //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
 
 
@@ -146,19 +145,21 @@ int runListeners(SDLcontext *context){
         case VS:
             while(oneTimeAccess != 1){
                  model.nbPlayers=2;
-                renderGameArea(&gameArea,*(context->renderer));
+                renderGameArea(&gameArea,context,&(model));
+                Mix_HaltMusic();
+                Mix_PlayMusic(gameMusic.inGameMusic,-1);
                 oneTimeAccess = 1;
             }
 
 
             if(checkCollisions(&model) != -1){
-                //Mix_HaltMusic();
+                Mix_HaltMusic();
                 SDL_RenderClear(*context->renderer);
                 freeGridArray(model.grid);
                 resetModel(&model);
                 oneTimeAccess = 0;
                 activeView = main_menu;
-                //Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
+                Mix_PlayMusic(gameMusic.mainMenuMusic,-1);
             }
 
             updateModel(&model,*(context->renderer));
@@ -172,7 +173,7 @@ int runListeners(SDLcontext *context){
             activeView = main_menu;
             break;
         case options:
-            renderOptionsMenu(&optionsMenu,ctrOptionsMenu,*(context->renderer));
+            renderOptionsMenu(&optionsMenu,*(context->renderer));
             SDL_Delay(50);
             break;
         case scores_menu:

@@ -13,11 +13,16 @@ typedef struct{
 
 }ANIMATION;
 typedef struct{
+    SDL_Texture *loadingTexture; /**<Texture affiché en fond pour le chargement*/
     SDL_Texture *backgroundTexture; /**<Texture affiché en fond de la zone de jeu*/
+    TTF_Font *font; /**<La font utilisées sur le rendu de la zone de jeu*/
+    SDL_Color fontColor; /**<La couleur de la font utilisé sur le rendu de la zone de jeu */
+    SDL_Rect fontRect; /**<Le rectangle dans lequel sera rendu la font. */
     ANIMATION animations[2]; /**<Animations des personnages */
+
 }GAMEAREA;
 void nextAnimationStep(GAMEAREA *gameArea,MODEL *model,SDL_Renderer *renderer);
-void renderGameArea(GAMEAREA *gameArea,SDL_Renderer *renderer);
+void renderGameArea(GAMEAREA *gameArea,SDLcontext *context,MODEL *model);
 ANIMATION initCharAnimation(char *spriteSheetName,SDL_Renderer *renderer,int height,int widths,int widthl);
 ///
 /// \brief initGameArea Initialise la structure représentant le dessin de la zone de jeu

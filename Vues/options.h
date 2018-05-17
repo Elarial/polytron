@@ -1,6 +1,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 #include "../Controller/tools.h"
+#include "../Model/model.h"
 /**
   * \brief Structure représentant le menu options.
   * \sa initMenuOptions(SDLcontext *context);
@@ -18,13 +19,19 @@ typedef struct{
     TEXT keySelectValue; /**< Le descriptif de la valeur de selection des touches du jeu. */
     TEXT returnValue; /**< Le descriptif du texte permettant le retour au menu principal. */
     TEXT keySelection;/**<Le descriptif du texte informant la touche de saisie. */
+    TEXT p1NameSetTitle;
+    TEXT p1NameSetValue;
+    TEXT p2NameSetTitle;
+    TEXT p2NameSetValue;
+    int position;
+
 }MENU_OPTIONS;
 ///
 /// \brief initMenuOptions : Fonction d'initialisation du menu options.
 /// \param context : Contexte d'exectution du programme
 /// \return Le menu options initialisé
 ///
-MENU_OPTIONS initMenuOptions(SDLcontext *context);
+MENU_OPTIONS initMenuOptions(SDLcontext *context,MODEL *model);
 ///
 /// \brief renderOptionsMenu : Fonction permettant de copier le menu option sur le rendu en fonction de la position du curseur
 /// \param menuOptions : Le menu options qui sera affiché
@@ -32,7 +39,7 @@ MENU_OPTIONS initMenuOptions(SDLcontext *context);
 /// \param renderer : Le rendu sur lequel le menu option sera affiché
 /// \return EXIT_FAILURE si un problème est survenu, EXIT_SUCCESS sinon.
 ///
-int renderOptionsMenu(MENU_OPTIONS *menuOptions,int ctr,SDL_Renderer *renderer);
+int renderOptionsMenu(MENU_OPTIONS *menuOptions,SDL_Renderer *renderer);
 int renderkeySelection(MENU_OPTIONS *menuOptions,SDL_Renderer *renderer);
 #endif // OPTIONS_H
 

@@ -19,10 +19,8 @@ typedef struct{
   */
 typedef struct{
     int id; /**< Identifiant du joueur */
-    char* name; /**< Nom du joueur */
+    char name[20]; /**< Nom du joueur */
     int score; /**< Score du joueur */
-    int posX; /**< Position du joueur sur l'axe des abscisses de la grille */
-    int posY; /**< Position du joueur sur l'axe des ordonnées de la grille */
     SDL_Rect rect; /**< Rectangle ou sera affiché le joueur */
     int direction; /**< Direction du curseur du joueur sur la grille */
     SDL_Keycode keyUp; /**< Touche réglé pour le joueur en tant que "HAUT" */
@@ -46,7 +44,8 @@ typedef enum{
   */
 typedef enum{
     player1, /**< Valeur prise par l'id du joueur 1 */
-    player2 /**< Valeur prise par l'id du joueur 2 */
+    player2, /**< Valeur prise par l'id du joueur 2 */
+    draw /**<Valeur prise lors d'un match nul */
 }PLAYERID;
 /**
   *\brief Enum représentant les directions possibles pour les joueurs.

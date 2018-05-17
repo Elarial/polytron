@@ -12,12 +12,8 @@ int updateMainMenu(int *position,SDL_Keycode input,GAMEMUSIC *gameMusic){
         Mix_PlayChannel(-1,gameMusic->menuCursor,0);
         *(position) = *position - 1;
         break;
-    case SDLK_a:
-        Mix_PlayChannel(-1,gameMusic->menuDecide,0);
-        if(*(position) == solo||*(position) ==VS){
-            Mix_HaltMusic();
-            Mix_PlayMusic(gameMusic->inGameMusic,-1);
-        }
+    case SDLK_RETURN:
+        Mix_PlayChannel(-1,gameMusic->menuDecide,0);        
         return *(position);
     default:
         break;

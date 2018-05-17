@@ -2,7 +2,7 @@
 #include "../Controller/soundcontroller.h"
 
 void updateScoresMenu(int *activeView,SDL_Keycode input,GAMEMUSIC *gameMusic){
-    if(input == SDLK_a){
+    if(input == SDLK_RETURN){
         Mix_PlayChannel(-1,gameMusic->menuDecide,0);
         *activeView = main_menu;       
     }
